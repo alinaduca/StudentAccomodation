@@ -18,6 +18,7 @@ public class Student {
     private String email;
     private String telefon;
     private String facultate;
+    private String camin_repartizat;
     private Float medie;
     private List<String> preferinte;
     Connection connection;
@@ -32,6 +33,7 @@ public class Student {
         this.medie = medie;
         this.preferinte = preferinte;
         this.connection=connection;
+        this.camin_repartizat=null;
     }
 
     public Student() {
@@ -102,15 +104,15 @@ public class Student {
         this.preferinte = preferinte;
     }
 
-    public Student(String firstName, String lastName, String nrMatricol, String email, String telefon, Float medie, List<String> preferinte, Connection connection) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.nrMatricol = nrMatricol;
-        this.email = email;
-        this.telefon = telefon;
-        this.medie = medie;
-        this.preferinte = preferinte;
-        this.connection=connection;
-    }
+//    public Student(String firstName, String lastName, String nrMatricol, String email, String telefon, Float medie, List<String> preferinte, Connection connection) {
+//        this.firstName = firstName;
+//        this.lastName = lastName;
+//        this.nrMatricol = nrMatricol;
+//        this.email = email;
+//        this.telefon = telefon;
+//        this.medie = medie;
+//        this.preferinte = preferinte;
+//        this.connection=connection;
+//    }
 
 }

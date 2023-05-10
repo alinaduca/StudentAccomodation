@@ -3,20 +3,21 @@ package com.example.demo;
 import java.util.Objects;
 
 public class Camin {
+    private Integer id;
     private String nume;
-    private Integer capacitateTotala;
+    //private Integer capacitateTotala;
     private Integer capacitatePerCamera;
     private Integer pret;
-    private Integer nrLocuriFete;
-    private Integer nrLocuriBaieti;
+    private Integer nrCamereFete;
+    private Integer nrCamereBaieti;
 
-    public Camin(String nume, Integer capacitateTotala, Integer capacitatePerCamera, Integer pret, Integer nrLocuriFete, Integer nrLocuriBaieti) {
+    public Camin(Integer id, String nume, Integer capacitatePerCamera, Integer pret, Integer nrCamereFete, Integer nrCamereBaieti) {
+        this.id=id;
         this.nume = nume;
-        this.capacitateTotala = capacitateTotala;
         this.capacitatePerCamera = capacitatePerCamera;
         this.pret = pret;
-        this.nrLocuriFete = nrLocuriFete;
-        this.nrLocuriBaieti = nrLocuriBaieti;
+        this.nrCamereFete = nrCamereFete;
+        this.nrCamereBaieti = nrCamereBaieti;
     }
 
     public String getNume() {
@@ -25,14 +26,6 @@ public class Camin {
 
     public void setNume(String nume) {
         this.nume = nume;
-    }
-
-    public Integer getCapacitateTotala() {
-        return capacitateTotala;
-    }
-
-    public void setCapacitateTotala(Integer capacitateTotala) {
-        this.capacitateTotala = capacitateTotala;
     }
 
     public Integer getCapacitatePerCamera() {
@@ -51,31 +44,32 @@ public class Camin {
         this.pret = pret;
     }
 
-    public Integer getNrLocuriFete() {
-        return nrLocuriFete;
+    public Integer getNrCamereFete() {
+        return nrCamereFete;
     }
 
-    public void setNrLocuriFete(Integer nrLocuriFete) {
-        this.nrLocuriFete = nrLocuriFete;
+    public void setNrCamereFete(Integer nrCamereFete) {
+        this.nrCamereFete = nrCamereFete;
     }
 
-    public Integer getNrLocuriBaieti() {
-        return nrLocuriBaieti;
+    public Integer getNrCamereBaieti() {
+        return nrCamereBaieti;
     }
 
-    public void setNrLocuriBaieti(Integer nrLocuriBaieti) {
-        this.nrLocuriBaieti = nrLocuriBaieti;
+    public void setNrCamereBaieti(Integer nrCamereBaieti) {
+        this.nrCamereBaieti = nrCamereBaieti;
     }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Camin camin = (Camin) o;
-        return Objects.equals(nume, camin.nume) && Objects.equals(capacitateTotala, camin.capacitateTotala) && Objects.equals(capacitatePerCamera, camin.capacitatePerCamera) && Objects.equals(pret, camin.pret) && Objects.equals(nrLocuriFete, camin.nrLocuriFete) && Objects.equals(nrLocuriBaieti, camin.nrLocuriBaieti);
+        return Objects.equals(id, camin.id) && Objects.equals(nume, camin.nume) && Objects.equals(capacitatePerCamera, camin.capacitatePerCamera) && Objects.equals(pret, camin.pret) && Objects.equals(nrCamereFete, camin.nrCamereFete) && Objects.equals(nrCamereBaieti, camin.nrCamereBaieti);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nume, capacitateTotala, capacitatePerCamera, pret, nrLocuriFete, nrLocuriBaieti);
+        //cred ca trebuie si id aici
+        return Objects.hash(nume, capacitatePerCamera, pret, nrCamereFete, nrCamereBaieti);
     }
 }
