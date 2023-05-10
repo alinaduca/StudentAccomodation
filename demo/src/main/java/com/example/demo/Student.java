@@ -12,8 +12,10 @@ import java.util.ArrayList;
 
 
 public class Student {
+    private int id;
     private String firstName;
     private String lastName;
+    private String gen;
     private String nrMatricol;
     private String email;
     private String telefon;
@@ -23,9 +25,11 @@ public class Student {
     private List<String> preferinte;
     Connection connection;
 
-    public Student(String firstName, String lastName, String nrMatricol, String email, String telefon, String facultate, Float medie, List<String> preferinte, Connection connection) {
+    public Student(int id, String firstName, String lastName, String gen, String nrMatricol, String email, String telefon, String facultate, Float medie, List<String> preferinte, Connection connection) {
+        this.id =id;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.gen = gen;
         this.nrMatricol = nrMatricol;
         this.email = email;
         this.telefon = telefon;
@@ -40,6 +44,9 @@ public class Student {
         preferinte = new ArrayList<>();
     }
 
+    public int getId () {
+        return  id;
+    }
     public String getFirstName() {
         return firstName;
     }
@@ -50,6 +57,10 @@ public class Student {
 
     public String getLastName() {
         return lastName;
+    }
+
+    public String getGen() {
+        return gen;
     }
 
     public String getFacultate() {

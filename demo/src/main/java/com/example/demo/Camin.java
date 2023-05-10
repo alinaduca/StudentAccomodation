@@ -19,6 +19,9 @@ public class Camin {
         this.nrCamereFete = nrCamereFete;
         this.nrCamereBaieti = nrCamereBaieti;
     }
+    public int getId () {
+        return id;
+    }
 
     public String getNume() {
         return nume;
