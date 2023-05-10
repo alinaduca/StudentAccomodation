@@ -4,9 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Student {
-    String firstName;
-    String lastName;
-    String nrMatricol;
+    private String firstName;
+    private String lastName;
+    private String nrMatricol;
+    private String email;
+    private String telefon;
+    private String facultate;
+    private Float medie;
+    private List<String> preferinte;
 
     public Student(String firstName, String lastName, String nrMatricol, String email, String telefon, String facultate, Float medie, List<String> preferinte) {
         this.firstName = firstName;
@@ -18,12 +23,6 @@ public class Student {
         this.medie = medie;
         this.preferinte = preferinte;
     }
-
-    String email;
-    String telefon;
-    String facultate;
-    Float medie;
-    List<String> preferinte;
 
     public Student() {
         preferinte = new ArrayList<>();

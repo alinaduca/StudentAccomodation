@@ -3,12 +3,12 @@ package com.example.demo;
 import java.util.Objects;
 
 public class Camin {
-    String nume;
-    Integer capacitateTotala;
-    Integer capacitatePerCamera;
-    Integer pret;
-    Integer nrLocuriFete;
-    Integer nrLocuriBaieti;
+    private String nume;
+    private Integer capacitateTotala;
+    private Integer capacitatePerCamera;
+    private Integer pret;
+    private Integer nrLocuriFete;
+    private Integer nrLocuriBaieti;
 
     public Camin(String nume, Integer capacitateTotala, Integer capacitatePerCamera, Integer pret, Integer nrLocuriFete, Integer nrLocuriBaieti) {
         this.nume = nume;
