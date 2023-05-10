@@ -77,9 +77,14 @@ public class HelloApplication extends Application {
         );
         configPanel.setAlignment(Pos.CENTER);
         configPanel.setSpacing(10);
-        root.setTop(configPanel);
-        root.setCenter(canvas);
-        stage.setScene(new Scene(root, 700, 500));
+        Button submit = new Button("Aplicare");
+        HBox controlPanel = new HBox(submit);
+        controlPanel.setAlignment(Pos.CENTER);
+        root.setCenter(configPanel);
+        root.setBottom(submit);
+
+//        root.setCenter(canvas);
+        stage.setScene(new Scene(root, 800, 500));
         stage.show();
     }
 
