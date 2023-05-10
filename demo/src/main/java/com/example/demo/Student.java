@@ -2,6 +2,14 @@ package com.example.demo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.ArrayList;
+
 
 public class Student {
     private String firstName;
@@ -12,8 +20,9 @@ public class Student {
     private String facultate;
     private Float medie;
     private List<String> preferinte;
+    Connection connection;
 
-    public Student(String firstName, String lastName, String nrMatricol, String email, String telefon, String facultate, Float medie, List<String> preferinte) {
+    public Student(String firstName, String lastName, String nrMatricol, String email, String telefon, String facultate, Float medie, List<String> preferinte, Connection connection) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.nrMatricol = nrMatricol;
@@ -22,6 +31,7 @@ public class Student {
         this.facultate = facultate;
         this.medie = medie;
         this.preferinte = preferinte;
+        this.connection=connection;
     }
 
     public Student() {
@@ -92,7 +102,7 @@ public class Student {
         this.preferinte = preferinte;
     }
 
-    public Student(String firstName, String lastName, String nrMatricol, String email, String telefon, Float medie, List<String> preferinte) {
+    public Student(String firstName, String lastName, String nrMatricol, String email, String telefon, Float medie, List<String> preferinte, Connection connection) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.nrMatricol = nrMatricol;
@@ -100,5 +110,7 @@ public class Student {
         this.telefon = telefon;
         this.medie = medie;
         this.preferinte = preferinte;
+        this.connection=connection;
     }
+
 }
