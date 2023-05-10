@@ -125,5 +125,9 @@ public class Student {
 //        this.preferinte = preferinte;
 //        this.connection=connection;
 //    }
+    @Override
+    public String toString() {
+        return firstName;
+    }
 
 }

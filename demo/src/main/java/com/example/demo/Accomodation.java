@@ -10,28 +10,38 @@ import java.util.List;
 
 public class Accomodation {
     Connection connection;
-    public Accomodation(String lastName, String firstName, String an, String grupa, String emailAdress, String matricol, String medie, String dataNastere, String femaleGender, String maleGender, Connection connection) {
+    public Accomodation(Connection connection) {
         this.connection=connection;
     }
 
     public void RepartizareStudentiInCamin () {
         //pentru fiecare facultate
         List<String> facultati = getFacultati();
+        System.out.println("Facultati: ");
+        System.out.println(facultati.toString());
         for (String facultate : facultati)
         {
             //selectam caminele la care facultatea a primit locuri
+            System.out.println("");
+            System.out.println("Camine la " + facultate);
             List<Camin> camine = getCaminePentruFacultate(facultate);
+            System.out.println(camine.toString());
             //selectam studentii ordonati descrescator dupa medie
+            System.out.println("");
+            System.out.println("Studenti dupa medie:");
             List<Student> studenti = getStudentiDupaMedieDeLaFacultate(facultate);
+            System.out.println(studenti.toString());
             for(Student student : studenti)
             {
                 for (String preferinta : student.getPreferinte())
                 {
-                    if(verificaDisponibilitatePreferinta(preferinta, camine, student)==true)
-                    {
-                        updateRepartizareCaminPentruStudent(student.getId(), preferinta);
-                        break;
-                    }
+                    //asta inca nu da bine dar cred ca e din cauza ca trebuie sa ma adaug cate cave in baza de date, ca sunt prea putine in facultati_camine
+//                    if(verificaDisponibilitatePreferinta(preferinta, camine, student)==true)
+//                    {
+//                        System.out.println("am actualizat caminul studentului " + student.getFirstName() + " cu valloarea " + preferinta);
+//                        updateRepartizareCaminPentruStudent(student.getId(), preferinta);
+//                        break;
+//                    }
                 }
             }
         }
@@ -58,8 +68,10 @@ public class Accomodation {
         for (Camin camin : camine) {
             if (camin.getNume().equals(preferinta)) {
                 // Am găsit caminul, decrementăm nrLocuri si ii asociem studentului un camin
-                if(student.getGen()=="fata") {
+                if(student.getGen().equals("fata")) {
+                    System.out.println("E fata");
                     int nrLocuri = getNrLocuriFeteDeLaOFaculatePentruUnCamin(student.getFacultate(), camin.getId());
+                    System.out.println(nrLocuri);
                     if (nrLocuri > 0) {
                         decrementareNrLocuriFeteDeLaOFaculatePentruUnCamin(student.getFacultate(), camin.getId());
                         return true;
@@ -67,7 +79,8 @@ public class Accomodation {
                         return false;
                     }
                 }
-                else if (student.getGen()=="baiat") {
+                else if (student.getGen().equals("baiat")) {
+                    System.out.println("E baiat");
                     int nrLocuri = getNrLocuriBaietiDeLaOFaculatePentruUnCamin(student.getFacultate(), camin.getId());
                     if (nrLocuri > 0) {
                         decrementareNrLocuriBaietiDeLaOFaculatePentruUnCamin(student.getFacultate(), camin.getId());
@@ -78,7 +91,7 @@ public class Accomodation {
                 }
             }
         }
-        System.out.println("Caminul " + preferinta + " nu există în listă.");
+        //System.out.println("Caminul " + preferinta + " nu exista în lista.");
         return false;
     }
 
@@ -119,7 +132,7 @@ public class Accomodation {
             preparedStatement.setString(1, numeFacultate);
             preparedStatement.setInt(2, idCamin);
             ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 int nr_locuri_fete = resultSet.getInt("locuri_fete");
                 return nr_locuri_fete;
             }
@@ -148,10 +161,10 @@ public class Accomodation {
     public List<Student> getStudentiDupaMedieDeLaFacultate(String facultate) {
         List<Student> studenti = new ArrayList<>();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM studenti WHERE facultate = ? ORDER BY medie DESC");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM studenti1 WHERE facultate = ? ORDER BY medie DESC");
             preparedStatement.setString(1, facultate);
             ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String nume = resultSet.getString("nume");
                 String prenume = resultSet.getString("prenume");
@@ -183,10 +196,10 @@ public class Accomodation {
     public List<Camin> getCaminePentruFacultate(String facultate) {
         List<Camin> camine = new ArrayList<>();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT nume FROM facultate_camine fc JOIN camine c ON fc.id_camin=c.id WHERE nume_facultate = ?");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM facultate_camine fc JOIN camine c ON fc.id_camin=c.id WHERE nume_facultate = ?");
             preparedStatement.setString(1, facultate);
             ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String nume = resultSet.getString("nume");
                 int capacitatePerCamera = resultSet.getInt("capacitate_per_camera");
@@ -207,7 +220,7 @@ public class Accomodation {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT DISTINCT nume_facultate FROM facultate_camine");
             ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 String facultate = resultSet.getString("nume_facultate");
                 facultati.add(facultate);
             }

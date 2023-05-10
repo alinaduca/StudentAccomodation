@@ -75,4 +75,9 @@ public class Camin {
         //cred ca trebuie si id aici
         return Objects.hash(nume, capacitatePerCamera, pret, nrCamereFete, nrCamereBaieti);
     }
+
+    @Override
+    public String toString() {
+        return nume;
+    }
 }
