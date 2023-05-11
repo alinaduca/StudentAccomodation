@@ -70,7 +70,7 @@ public class HelloApplication extends Application {
         preferinteTextField.setPrefWidth(textFieldWidth);
         preferinteTextField.setMaxWidth(textFieldWidth);
 
-        Canvas canvas = new Canvas(700, 300);
+        Canvas canvas = new Canvas(700, 600);
         //email, telefon, facultate, medie, preferinte.
         VBox configPanel = new VBox(numeLabel, numeTextField, prenumeLabel, prenumeTextField,
                 nrMatricolLabel, nrMatricolTextField, emailLabel, emailTextField,
@@ -83,15 +83,15 @@ public class HelloApplication extends Application {
         HBox controlPanel = new HBox(submit);
         controlPanel.setAlignment(Pos.CENTER);
         root.setCenter(configPanel);
-        root.setBottom(submit);
+        root.setBottom(controlPanel);
 
 //        root.setCenter(canvas);
-        stage.setScene(new Scene(root, 800, 500));
+        stage.setScene(new Scene(root, 700, 600));
         stage.show();
     }
 
     public static void main(String[] args) throws SQLException {
-        Connection connection = DatabaseConnection.getInstance().getConnection();
+//        Connection connection = DatabaseConnection.getInstance().getConnection();
         launch();
     }
 }
