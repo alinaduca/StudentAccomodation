@@ -12,7 +12,8 @@
 --  preferinta2 VARCHAR2(30),
 --  preferinta3 VARCHAR2(30),
 --  preferinta4 VARCHAR2(30),
---  preferinta5 VARCHAR2(30)
+--  preferinta5 VARCHAR2(30),
+--  camin_repartizat VARCHAR2(30)
 --)
 
 --CREATE TABLE camine (
