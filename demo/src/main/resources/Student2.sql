@@ -28,31 +28,11 @@
 
 --CREATE TABLE facultate_camine (
 --  id INT NOT NULL PRIMARY KEY,
---  nume_facultate VARCHAR2(40),
+--  nume_facultate VARCHAR2(50),
 --  id_camin INTEGER,
 --  locuri_fete INTEGER,
 --  locuri_baieti INTEGER
 --)
-
-
-INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (1, 'Facultatea de Biologie', 1, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
-INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (2, 'Facultatea de Biologie', 2, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
-INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (3, 'Facultatea de Biologie', 4, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
-INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (4, 'Facultatea de Biologie', 6, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
-INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (5, 'Facultatea de Chimie', 2, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
-INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (6, 'Facultatea de Chimie', 3, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
-INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (7, 'Facultatea de Drept', 1, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
-INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (8, 'Facultatea de Drept', 3, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
-INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (9, 'Facultatea de Economie si Administrarea Afacerilor', 1, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
-INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (10, 'Facultatea de Economie si Administrarea Afacerilor', 2, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
-INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (11, 'Facultatea de Economie si Administrarea Afacerilor', 3, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
-INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (12, 'Facultatea de Educatie Fizica si Sport', 2, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
-INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (13, 'Facultatea de Educatie Fizica si Sport', 4, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
-INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (14, 'Facultatea de Filosofie si Stiinte Social-Politice', 3, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
-INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (15, 'Facultatea de Filosofie si Stiinte Social-Politice', 4, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
-INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (16, 'Facultatea de Fizica', 1, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
-INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (17, 'Facultatea de Fizica', 3, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
-INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (18, 'Facultatea de Geografie si Geologie', 1, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
 
 
 INSERT INTO camine (id, nume, capacitate_per_camera, pret, nr_camere_fete, nr_camere_baieti) VALUES (1, 'Akademos', 2, 650, 30, 20);
@@ -213,10 +193,88 @@ BEGIN
 END;
 
 
+set serveroutput on;
+DECLARE
+  nume_facultate1 VARCHAR2(40);
+  id_camin1 INTEGER;
+  locuri_baieti1 INTEGER;
+  locuri_fete1 INTEGER;
+  id1 INTEGER;
+BEGIN
+  id1 := 1;
+  FOR i IN 1..13 LOOP
+    INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (id1, 'Facultatea de Biologie', i, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
+    id1 := id1+1;
+  END LOOP;
+  FOR i IN 1..13 LOOP
+    INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (id1, 'Facultatea de Chimie', i, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
+    id1 := id1+1;
+  END LOOP;
+  FOR i IN 1..13 LOOP
+    INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (id1, 'Facultatea de Drept', i, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
+    id1 := id1+1;
+  END LOOP;
+  FOR i IN 1..13 LOOP
+    INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (id1, 'Facultatea de Economie si Administrarea Afacerilor', i, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
+    id1 := id1+1;
+  END LOOP;
+  FOR i IN 1..13 LOOP
+    INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (id1, 'Facultatea de Educatie Fizica si Sport', i, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
+    id1 := id1+1;
+  END LOOP;
+  FOR i IN 1..13 LOOP
+    INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (id1, 'Facultatea de Filosofie si Stiinte Social-Politice', i, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
+    id1 := id1+1;
+  END LOOP;
+  FOR i IN 1..13 LOOP
+    INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (id1, 'Facultatea de Fizica', i, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
+    id1 := id1+1;
+  END LOOP;
+  FOR i IN 1..13 LOOP
+    INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (id1, 'Facultatea de Geografie si Geologie', i, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
+    id1 := id1+1;
+  END LOOP;
+  FOR i IN 1..13 LOOP
+    INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (id1, 'Facultatea de Informatica', i, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
+    id1 := id1+1;
+  END LOOP;
+  FOR i IN 1..13 LOOP
+    INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (id1, 'Facultatea de Istorie', i, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
+    id1 := id1+1;
+  END LOOP;
+  FOR i IN 1..13 LOOP
+    INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (id1, 'Facultatea de Litere', i, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
+    id1 := id1+1;
+  END LOOP;
+  FOR i IN 1..13 LOOP
+    INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (id1, 'Facultatea de Matematica', i, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
+    id1 := id1+1;
+  END LOOP;
+  FOR i IN 1..13 LOOP
+    INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (id1, 'Facultatea de Psihologie si Stiinte ale Educatiei', i, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
+    id1 := id1+1;
+  END LOOP;
+  FOR i IN 1..13 LOOP
+    INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (id1, 'Facultatea de Teologie Ortodoxa', i, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
+    id1 := id1+1;
+  END LOOP;
+  FOR i IN 1..13 LOOP
+    INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (id1, 'Facultatea de Teologie Romano-Catolica', i, ROUND(DBMS_RANDOM.VALUE(0, 5)), ROUND(DBMS_RANDOM.VALUE(0, 5)));
+    id1 := id1+1;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE('Inserted rows.');
+END;
+
+
+
+
+--drop table studenti1;
 --select * from studenti1;
 --select * from camine; 
 --select * from facultate_camine;
---Delete from studenti1;
+--delete from studenti1;
+--delete from facultate_camine;
+--drop table facultate_camine;
 --select * from studenti1;
 --select * from facultate_camine;
 --SELECT * FROM studenti1 WHERE facultate = 'Facultatea de Matematica' ORDER BY medie DESC;
