@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Accomodation {
     Connection connection;
-    public Accomodation(Connection connection) {
+   public Accomodation(Connection connection) {
         this.connection=connection;
     }
 
@@ -18,8 +18,9 @@ public class Accomodation {
         List<String> facultati = getFacultati();
         System.out.println("Facultati: ");
         System.out.println(facultati.toString());
-        for (String facultate : facultati)
-        {
+        String facultate = "Facultatea de Istorie";
+//        for (String facultate : facultati)
+//        {
             //selectam caminele la care facultatea a primit locuri
             System.out.println("");
             System.out.println("Camine la " + facultate);
@@ -32,26 +33,37 @@ public class Accomodation {
             System.out.println(studenti.toString());
             for(Student student : studenti)
             {
+                System.out.println(student.toString());
                 for (String preferinta : student.getPreferinte())
                 {
+                    System.out.println(preferinta);
                     //asta inca nu da bine dar cred ca e din cauza ca trebuie sa ma adaug cate cave in baza de date, ca sunt prea putine in facultati_camine
-//                    if(verificaDisponibilitatePreferinta(preferinta, camine, student)==true)
-//                    {
-//                        System.out.println("am actualizat caminul studentului " + student.getFirstName() + " cu valloarea " + preferinta);
-//                        updateRepartizareCaminPentruStudent(student.getId(), preferinta);
-//                        break;
-//                    }
+                    if(verificaDisponibilitatePreferinta(preferinta, camine, student)==true)
+                    {
+                        System.out.println("am actualizat caminul studentului " + student.getFirstName() + " cu valloarea " + preferinta);
+                        updateRepartizareCaminPentruStudent(student.getId(), preferinta);
+                        break;
+                    }
                 }
             }
-        }
+//        }
     }
 
     public void updateRepartizareCaminPentruStudent(int id_student, String caminRepartizat) {
+        System.out.println("1");
+       PreparedStatement preparedStatement = null;
+        //Connection connection = null;
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE student SET camin_repartizat = ? WHERE id = ?");
+            System.out.println("2");
+            //connection = DatabaseConnection.getInstance().getConnection();
+            preparedStatement = connection.prepareStatement("UPDATE studenti1 SET camin_repartizat = ? WHERE id = ?");
+            System.out.println("3");
             preparedStatement.setString(1, caminRepartizat);
+            System.out.println("4");
             preparedStatement.setInt(2, id_student);
+            System.out.println("5");
             int rowsUpdated = preparedStatement.executeUpdate();
+            System.out.println("6");
             if (rowsUpdated > 0) {
                 System.out.println("S-a actualizat cu succes caminul repartizat al studentului.");
             } else {
@@ -59,6 +71,14 @@ public class Accomodation {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        finally {
+            try {
+                preparedStatement.close();
+                //connection.close();
+            } catch (SQLException e){
+                e.printStackTrace();
+            }
         }
     }
 
@@ -88,18 +108,24 @@ public class Accomodation {
                         return false;
                     }
                 }
+                System.out.println("%%%Am gasit");
             }
         }
+        System.out.println("%%%Nu am gasit");
         //System.out.println("Caminul " + preferinta + " nu exista în lista.");
         return false;
     }
 
     public int getNrLocuriBaietiDeLaOFaculatePentruUnCamin(String numeFacultate, int idCamin) {
+        //Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT locuri_baieti FROM facultate_camine WHERE nume_facultate =? AND id_camin = ?");
+            //connection = DatabaseConnection.getInstance().getConnection();
+            preparedStatement = connection.prepareStatement("SELECT locuri_baieti FROM facultate_camine WHERE nume_facultate =? AND id_camin = ?");
             preparedStatement.setString(1, numeFacultate);
             preparedStatement.setInt(2, idCamin);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 int nr_locuri_baieti = resultSet.getInt("locuri_baieti");
                 return nr_locuri_baieti;
@@ -107,11 +133,23 @@ public class Accomodation {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        finally {
+            try {
+                //connection.close();
+                resultSet.close();
+                preparedStatement.close();
+            } catch (SQLException e){
+                e.printStackTrace();
+            }
+        }
         return 0;
     }
     public void decrementareNrLocuriBaietiDeLaOFaculatePentruUnCamin(String numeFacultate, int idCamin) {
+        //Connection connection = null;
+        PreparedStatement preparedStatement = null;
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE facultate_camine SET locuri_baieti = locuri_baieti - 1 WHERE nume_facultate = ? AND id_camin = ?");
+            //connection = DatabaseConnection.getInstance().getConnection();
+            preparedStatement = connection.prepareStatement("UPDATE facultate_camine SET locuri_baieti = locuri_baieti - 1 WHERE nume_facultate = ? AND id_camin = ?");
             preparedStatement.setString(1, numeFacultate);
             preparedStatement.setInt(2, idCamin);
             int rowsUpdated = preparedStatement.executeUpdate();
@@ -123,27 +161,53 @@ public class Accomodation {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        finally {
+            try {
+                //connection.close();
+                preparedStatement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public int getNrLocuriFeteDeLaOFaculatePentruUnCamin(String numeFacultate, int idCamin) {
+        //Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT locuri_fete FROM facultate_camine WHERE nume_facultate =? AND id_camin = ?");
+            //connection = DatabaseConnection.getInstance().getConnection();
+            System.out.println("facultatea " + numeFacultate + " la caminul " + idCamin);
+            preparedStatement = connection.prepareStatement("SELECT locuri_fete FROM facultate_camine WHERE nume_facultate = ? AND id_camin = ?");
             preparedStatement.setString(1, numeFacultate);
             preparedStatement.setInt(2, idCamin);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 int nr_locuri_fete = resultSet.getInt("locuri_fete");
+                System.out.println("Locuri fete la facultatea " + numeFacultate + " la caminul " + idCamin + " : " + nr_locuri_fete);
                 return nr_locuri_fete;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        finally {
+            try {
+                //connection.close();
+                resultSet.close();
+                preparedStatement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
         return 0;
     }
 
     public void decrementareNrLocuriFeteDeLaOFaculatePentruUnCamin(String numeFacultate, int idCamin) {
+        //Connection connection = null;
+        PreparedStatement preparedStatement = null;
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE facultate_camine SET locuri_fete = locuri_fete - 1 WHERE nume_facultate = ? AND id_camin = ?");
+            //connection = DatabaseConnection.getInstance().getConnection();
+            preparedStatement = connection.prepareStatement("UPDATE facultate_camine SET locuri_fete = locuri_fete - 1 WHERE nume_facultate = ? AND id_camin = ?");
             preparedStatement.setString(1, numeFacultate);
             preparedStatement.setInt(2, idCamin);
             int rowsUpdated = preparedStatement.executeUpdate();
@@ -155,14 +219,26 @@ public class Accomodation {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        finally {
+            try {
+                //connection.close();
+                preparedStatement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public List<Student> getStudentiDupaMedieDeLaFacultate(String facultate) {
         List<Student> studenti = new ArrayList<>();
+        //Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM studenti1 WHERE facultate = ? ORDER BY medie DESC");
+            //connection = DatabaseConnection.getInstance().getConnection();
+            preparedStatement = connection.prepareStatement("SELECT * FROM studenti1 WHERE facultate = ? ORDER BY medie DESC");
             preparedStatement.setString(1, facultate);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String nume = resultSet.getString("nume");
@@ -189,17 +265,30 @@ public class Accomodation {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        finally {
+            try {
+                //connection.close();
+                resultSet.close();
+                preparedStatement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
         return studenti;
     }
 
     public List<Camin> getCaminePentruFacultate(String facultate) {
         List<Camin> camine = new ArrayList<>();
+        //Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM facultate_camine fc JOIN camine c ON fc.id_camin=c.id WHERE nume_facultate = ?");
+            //connection = DatabaseConnection.getInstance().getConnection();
+            preparedStatement = connection.prepareStatement("SELECT * FROM facultate_camine fc JOIN camine c ON fc.id_camin=c.id WHERE nume_facultate = ?");
             preparedStatement.setString(1, facultate);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                int id = resultSet.getInt("id");
+                int id = resultSet.getInt("id_camin");
                 String nume = resultSet.getString("nume");
                 int capacitatePerCamera = resultSet.getInt("capacitate_per_camera");
                 int pret = resultSet.getInt("pret");
@@ -211,20 +300,42 @@ public class Accomodation {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        finally {
+            try {
+                //connection.close();
+                resultSet.close();
+                preparedStatement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
         return camine;
     }
 
     public List<String> getFacultati() {
         List<String> facultati = new ArrayList<>();
+        //Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT DISTINCT nume_facultate FROM facultate_camine");
-            ResultSet resultSet = preparedStatement.executeQuery();
+            //connection = DatabaseConnection.getInstance().getConnection();
+            preparedStatement = connection.prepareStatement("SELECT DISTINCT nume_facultate FROM facultate_camine");
+            resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 String facultate = resultSet.getString("nume_facultate");
                 facultati.add(facultate);
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        finally {
+            try {
+                //connection.close();
+                resultSet.close();
+                preparedStatement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return facultati;
     }
