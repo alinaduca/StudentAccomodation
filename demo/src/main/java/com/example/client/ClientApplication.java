@@ -6,6 +6,9 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.application.Application;
 import javafx.scene.layout.BorderPane;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.stream.Collectors;
 import javafx.scene.canvas.Canvas;
 import javafx.event.EventHandler;
@@ -30,9 +33,9 @@ import java.net.Socket;
 import java.util.List;
 
 public class ClientApplication extends Application {
-    private String host;
     private int port;
-    private Socket socket;
+    private InetAddress host;
+    private Socket socket = null;
     private BufferedReader in;
     private PrintWriter out;
     private String firstName;
@@ -53,9 +56,11 @@ public class ClientApplication extends Application {
 
     public void init() {
         try {
-            socket = new Socket(host, port);
+            host = InetAddress.getLocalHost();
+            socket = new Socket(host.getHostName(), port);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
+            out.println("hello");
             System.out.println("Connected to server at " + host + ":" + port);
 //            System.out.println("Type 'exit' to quit, 'stop' to stop the server, or any other command you want server to execute.");
 //            BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
@@ -68,13 +73,17 @@ public class ClientApplication extends Application {
 //                String response = in.readLine();
 //                System.out.println(response);
 //            }
-//            socket.close();
+            socket.close();
         } catch(IOException e) { }
     }
 
     @Override
     public void start(Stage stage) throws SQLException {
-        this.host = "localhost";
+        try {
+            this.host = InetAddress.getLocalHost();
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
         this.port = 12345;
         init();
         Connection connection = DatabaseConnection.getInstance().getConnection();
