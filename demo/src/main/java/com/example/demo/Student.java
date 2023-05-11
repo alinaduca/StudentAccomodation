@@ -114,7 +114,6 @@ public class Student {
     public void setPreferinte(List<String> preferinte) {
         this.preferinte = preferinte;
     }
-
 //    public Student(String firstName, String lastName, String nrMatricol, String email, String telefon, Float medie, List<String> preferinte, Connection connection) {
 //        this.firstName = firstName;
 //        this.lastName = lastName;
@@ -123,11 +122,11 @@ public class Student {
 //        this.telefon = telefon;
 //        this.medie = medie;
 //        this.preferinte = preferinte;
-//        this.connection=connection;
+//        this.connection = connection;
 //    }
+
     @Override
     public String toString() {
-        return firstName;
+        return lastName + " " + firstName + " " + nrMatricol;
     }
-
 }

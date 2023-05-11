@@ -1,26 +1,27 @@
 package com.example.demo;
 
-import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.control.*;
+import javafx.beans.value.ChangeListener;
+import javafx.collections.FXCollections;
+import javafx.application.Application;
 import javafx.scene.layout.BorderPane;
+import java.util.stream.Collectors;
+import javafx.scene.canvas.Canvas;
+import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import java.sql.Connection;
+import javafx.scene.paint.Color;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
 import java.sql.SQLException;
+import javafx.geometry.Pos;
 import java.util.ArrayList;
+import java.sql.Connection;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class HelloApplication extends Application {
     private String firstName;
@@ -258,6 +259,7 @@ public class HelloApplication extends Application {
         HBox genrePanel = new HBox(genreLabel, bifat);
 
         Canvas canvas = new Canvas(700, 600);
+
         VBox configPanel = new VBox(numePanel, prenumePanel,
                 nrMatricolPanel, emailPanel,
                 telefonPanel, facultatePanel,
@@ -317,11 +319,13 @@ public class HelloApplication extends Application {
                     }
                 }
                 mesajLabel.setText(mesaj);
+                mesajLabel.setTextFill(Color.RED);
             }
         });
         controlPanel.setAlignment(Pos.CENTER);
         root.setCenter(configPanel);
         root.setBottom(controlPanel);
+        stage.setTitle("StudentAccomodation");
         stage.setScene(new Scene(root, 700, 600));
         stage.show();
     }
