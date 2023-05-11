@@ -1,15 +1,10 @@
-package com.example.demo;
+package com.example.server;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.example.client.Camin;
+
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.sql.SQLException;
-import java.util.List;
 import java.util.ArrayList;
-
+import java.util.List;
 
 public class Student {
     private int id;
@@ -21,12 +16,26 @@ public class Student {
     private String telefon;
     private String facultate;
     private String camin_repartizat;
-    private Float medie;
-    private List<String> preferinte;
+    private double medie;
+    private List<Camin> preferinte;
     Connection connection;
 
-    public Student(int id, String firstName, String lastName, String gen, String nrMatricol, String email, String telefon, String facultate, Float medie, List<String> preferinte, Connection connection) {
-        this.id =id;
+    public Student(String lastName, String firstName, String nrMatricol, String email, String telefon, String facultate, double medie, List<Camin> preferinte, String gen) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.gen = gen;
+        this.nrMatricol = nrMatricol;
+        this.email = email;
+        this.telefon = telefon;
+        this.facultate = facultate;
+        this.medie = medie;
+        this.preferinte = preferinte;
+//        this.connection = connection;
+        this.camin_repartizat = null;
+    }
+
+    public Student(int id, String firstName, String lastName, String gen, String nrMatricol, String email, String telefon, String facultate, double medie, List<Camin> preferinte, Connection connection) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.gen = gen;
@@ -45,8 +54,9 @@ public class Student {
     }
 
     public int getId () {
-        return  id;
+        return id;
     }
+
     public String getFirstName() {
         return firstName;
     }
@@ -99,22 +109,23 @@ public class Student {
         this.telefon = telefon;
     }
 
-    public Float getMedie() {
+    public double getMedie() {
         return medie;
     }
 
-    public void setMedie(Float medie) {
+    public void setMedie(double medie) {
         this.medie = medie;
     }
 
-    public List<String> getPreferinte() {
+    public List<Camin> getPreferinte() {
         return preferinte;
     }
 
-    public void setPreferinte(List<String> preferinte) {
+    public void setPreferinte(List<Camin> preferinte) {
         this.preferinte = preferinte;
     }
-//    public Student(String firstName, String lastName, String nrMatricol, String email, String telefon, Float medie, List<String> preferinte, Connection connection) {
+
+//    public Student(String firstName, String lastName, String nrMatricol, String email, String telefon, double medie, List<String> preferinte, Connection connection) {
 //        this.firstName = firstName;
 //        this.lastName = lastName;
 //        this.nrMatricol = nrMatricol;

@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.client;
 
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -13,6 +13,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import java.sql.SQLException;
@@ -33,20 +34,93 @@ public class HelloApplication extends Application {
     private String facultate;
     private String mesaj;
     private double medie;
-    Camin camin1;
-    Camin camin2;
-    Camin camin3;
-    Camin camin4;
-    Camin camin5;
+    private Camin camin1;
+    private Camin camin2;
+    private Camin camin3;
+    private Camin camin4;
+    private Camin camin5;
     private List<Camin> preferinteCamine = new ArrayList<>();
 
     @Override
     public void start(Stage stage) throws SQLException {
-        final double textFieldWidth = 200;
         Connection connection = DatabaseConnection.getInstance().getConnection();
         Accomodation accomodation = new Accomodation(connection);
         accomodation.RepartizareStudentiInCamin();
 
+        stage.setTitle("StudentAccomodation");
+        firstPage(stage, accomodation);
+
+    }
+
+    public static void main(String[] args) throws SQLException {
+        launch();
+    }
+
+    private int valid(String lastName, String firstName, String nrMatricol, String email, String telefon, String facultate, double medie, List<Camin> preferinte, String gen) {
+        if(lastName == null || lastName.length() < 2) {
+            return 1;
+        }
+        if(firstName == null || firstName.length() < 2) {
+            return 2;
+        }
+        if(nrMatricol == null || nrMatricol.length() < 2) {
+            return 3;
+        }
+        if(email == null || email.length() < 2 || !email.contains("@") || !email.contains(".")) {
+            return 4;
+        }
+        if(telefon == null || telefon.length() != 10) {
+            return 5;
+        }
+        for(int i = 0; i < telefon.length(); i++) {
+            char c = telefon.charAt(i);
+            String s = c + "";
+            if(!"0123456789".contains(s)) {
+                System.out.println(s + ",");
+                return 5;
+            }
+        }
+        if(facultate == null || facultate.length() < 2) {
+            return 6;
+        }
+        if(medie < 1 || medie > 10) {
+            return 7;
+        }
+        if(preferinte == null || preferinte.size() < 1) {
+            return 8;
+        }
+        if(gen == null || gen.length() < 2) {
+            return 9;
+        }
+        return 0;
+    }
+
+    private void firstPage(Stage stage, Accomodation accomodation) {
+        BorderPane root = new BorderPane();
+        Button register = new Button("Înregistrare student");
+        register.setFont(Font.font(20));
+        Button check = new Button("Verifică repartizare");
+        check.setFont(Font.font(20));
+        Button repartitie = new Button("Realizează repartizare");
+        repartitie.setFont(Font.font(20));
+
+        VBox menu = new VBox(register, check, repartitie);
+        menu.setAlignment(Pos.CENTER);
+        menu.setSpacing(70);
+        root.setCenter(menu);
+        stage.setScene(new Scene(root, 700, 600));
+        stage.show();
+
+        register.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                draw(stage, accomodation);
+            }
+        });
+    }
+
+    private void draw(Stage stage, Accomodation accomodation) {
+        final double textFieldWidth = 200;
         BorderPane root = new BorderPane();
         Label numeLabel = new Label("Nume: ");
         TextField numeTextField = new TextField();
@@ -127,7 +201,6 @@ public class HelloApplication extends Application {
         });
         Label pref1 = new Label(" 1.) ");
         HBox pref1Panel = new HBox(pref1, camineComboBox);
-
 
         ComboBox camineComboBox1 = new ComboBox<>(optionsCamine1);
         camineComboBox1.setPrefWidth(textFieldWidth);
@@ -306,7 +379,10 @@ public class HelloApplication extends Application {
                 }
                 if(mesaj == null) {
                     switch(valid(lastName, firstName, nrMatricol, email, telefon, facultate, medie, preferinteCamine, gen)) {
-                        case 0: mesaj = null; break;
+                        case 0: mesaj = null;
+                                Student s = new Student(lastName, firstName, nrMatricol, email, telefon, facultate, medie, preferinteCamine, gen);
+                                firstPage(stage, accomodation);
+                                break;
                         case 1: mesaj = "Introduceți numele."; break;
                         case 2: mesaj = "Introduceți prenumele."; break;
                         case 3: mesaj = "Introduceți numărul matricol."; break;
@@ -328,49 +404,6 @@ public class HelloApplication extends Application {
         stage.setTitle("StudentAccomodation");
         stage.setScene(new Scene(root, 700, 600));
         stage.show();
-    }
-
-    public static void main(String[] args) throws SQLException {
-        launch();
-    }
-
-    private int valid(String lastName, String firstName, String nrMatricol, String email, String telefon, String facultate, double medie, List<Camin> preferinte, String gen) {
-        if(lastName == null || lastName.length() < 2) {
-            return 1;
-        }
-        if(firstName == null || firstName.length() < 2) {
-            return 2;
-        }
-        if(nrMatricol == null || nrMatricol.length() < 2) {
-            return 3;
-        }
-        if(email == null || email.length() < 2 || !email.contains("@") || !email.contains(".")) {
-            return 4;
-        }
-        if(telefon == null || telefon.length() != 10) {
-            return 5;
-        }
-        for(int i = 0; i < telefon.length(); i++) {
-            char c = telefon.charAt(i);
-            String s = c + "";
-            if(!"0123456789".contains(s)) {
-                System.out.println(s + ",");
-                return 5;
-            }
-        }
-        if(facultate == null || facultate.length() < 2) {
-            return 6;
-        }
-        if(medie < 1 || medie > 10) {
-            return 7;
-        }
-        if(preferinte == null || preferinte.size() < 1) {
-            return 8;
-        }
-        if(gen == null || gen.length() < 2) {
-            return 9;
-        }
-        return 0;
     }
 }
 

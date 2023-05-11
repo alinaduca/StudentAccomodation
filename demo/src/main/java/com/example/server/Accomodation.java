@@ -1,5 +1,7 @@
-package com.example.demo;
+package com.example.server;
 
+import com.example.client.Camin;
+import com.example.client.Student;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,7 +12,7 @@ import java.util.List;
 public class Accomodation {
     Connection connection;
     public Accomodation(Connection connection) {
-        this.connection=connection;
+        this.connection = connection;
     }
 
     public void RepartizareStudentiInCamin () {
@@ -23,16 +25,16 @@ public class Accomodation {
             //selectam caminele la care facultatea a primit locuri
 //            System.out.println("");
 //            System.out.println("Camine la " + facultate);
-            List<Camin> camine = getCaminePentruFacultate(facultate);
+            List<com.example.client.Camin> camine = getCaminePentruFacultate(facultate);
 //            System.out.println(camine.toString());
             //selectam studentii ordonati descrescator dupa medie
 //            System.out.println("");
 //            System.out.println("Studenti dupa medie:");
-            List<Student> studenti = getStudentiDupaMedieDeLaFacultate(facultate);
+            List<com.example.client.Student> studenti = getStudentiDupaMedieDeLaFacultate(facultate);
 //            System.out.println(studenti.toString());
-            for(Student student : studenti)
+            for(com.example.client.Student student : studenti)
             {
-                for (String preferinta : student.getPreferinte())
+                for (com.example.client.Camin preferinta : student.getPreferinte())
                 {
                     //asta inca nu da bine dar cred ca e din cauza ca trebuie sa ma adaug cate cave in baza de date, ca sunt prea putine in facultati_camine
 //                    if(verificaDisponibilitatePreferinta(preferinta, camine, student)==true)
@@ -62,9 +64,9 @@ public class Accomodation {
         }
     }
 
-    public boolean verificaDisponibilitatePreferinta(String preferinta, List<Camin> camine, Student student) {
+    public boolean verificaDisponibilitatePreferinta(String preferinta, List<com.example.client.Camin> camine, com.example.client.Student student) {
         // Căutăm caminul în listă după nume
-        for (Camin camin : camine) {
+        for (com.example.client.Camin camin : camine) {
             if (camin.getNume().equals(preferinta)) {
                 // Am găsit caminul, decrementăm nrLocuri si ii asociem studentului un camin
                 if(student.getGen().equals("fata")) {
@@ -157,8 +159,8 @@ public class Accomodation {
         }
     }
 
-    public List<Student> getStudentiDupaMedieDeLaFacultate(String facultate) {
-        List<Student> studenti = new ArrayList<>();
+    public List<com.example.client.Student> getStudentiDupaMedieDeLaFacultate(String facultate) {
+        List<com.example.client.Student> studenti = new ArrayList<>();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM studenti1 WHERE facultate = ? ORDER BY medie DESC");
             preparedStatement.setString(1, facultate);
@@ -171,19 +173,19 @@ public class Accomodation {
                 String nr_matricol = resultSet.getString("nr_matricol");
                 String email = resultSet.getString("email");
                 String telefon = resultSet.getString("telefon");
-                Float medie = resultSet.getFloat("medie");
+                double medie = resultSet.getDouble("medie");
                 String preferinta1 = resultSet.getString("preferinta1");
                 String preferinta2 = resultSet.getString("preferinta2");
                 String preferinta3 = resultSet.getString("preferinta3");
                 String preferinta4 = resultSet.getString("preferinta4");
                 String preferinta5 = resultSet.getString("preferinta5");
-                List<String> preferinte = new ArrayList<>();
-                preferinte.add(preferinta1);
-                preferinte.add(preferinta2);
-                preferinte.add(preferinta3);
-                preferinte.add(preferinta4);
-                preferinte.add(preferinta5);
-                Student student = new Student(id, nume, prenume, gen, nr_matricol, email, telefon, facultate, medie, preferinte, connection);
+                List<com.example.client.Camin> preferinte = new ArrayList<>();
+                preferinte.add(com.example.client.Camin.getByName(preferinta1));
+                preferinte.add(com.example.client.Camin.getByName(preferinta2));
+                preferinte.add(com.example.client.Camin.getByName(preferinta3));
+                preferinte.add(com.example.client.Camin.getByName(preferinta4));
+                preferinte.add(com.example.client.Camin.getByName(preferinta5));
+                com.example.client.Student student = new Student(id, nume, prenume, gen, nr_matricol, email, telefon, facultate, medie, preferinte, connection);
                 studenti.add(student);
             }
         } catch (SQLException e) {
@@ -192,8 +194,8 @@ public class Accomodation {
         return studenti;
     }
 
-    public List<Camin> getCaminePentruFacultate(String facultate) {
-        List<Camin> camine = new ArrayList<>();
+    public List<com.example.client.Camin> getCaminePentruFacultate(String facultate) {
+        List<com.example.client.Camin> camine = new ArrayList<>();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM facultate_camine fc JOIN camine c ON fc.id_camin=c.id WHERE nume_facultate = ?");
             preparedStatement.setString(1, facultate);
@@ -205,7 +207,7 @@ public class Accomodation {
                 int pret = resultSet.getInt("pret");
                 int nrCamereFete = resultSet.getInt("nr_camere_fete");
                 int nrCamereBaieti = resultSet.getInt("nr_camere_baieti");
-                Camin camin =new Camin(id, nume, capacitatePerCamera, pret, nrCamereFete, nrCamereBaieti);
+                com.example.client.Camin camin =new Camin(id, nume, capacitatePerCamera, pret, nrCamereFete, nrCamereBaieti);
                 camine.add(camin);
             }
         } catch (SQLException e) {

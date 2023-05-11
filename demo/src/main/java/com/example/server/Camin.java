@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.server;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,6 @@ import java.util.Objects;
 public class Camin {
     private Integer id;
     private String nume;
-    //private Integer capacitateTotala;
     private Integer capacitatePerCamera;
     private Integer pret;
     private Integer nrCamereFete;
