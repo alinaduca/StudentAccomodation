@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Camin {
@@ -10,6 +12,7 @@ public class Camin {
     private Integer pret;
     private Integer nrCamereFete;
     private Integer nrCamereBaieti;
+    private static List<Camin> camine = new ArrayList<>();
 
     public Camin(Integer id, String nume, Integer capacitatePerCamera, Integer pret, Integer nrCamereFete, Integer nrCamereBaieti) {
         this.id=id;
@@ -18,6 +21,7 @@ public class Camin {
         this.pret = pret;
         this.nrCamereFete = nrCamereFete;
         this.nrCamereBaieti = nrCamereBaieti;
+        camine.add(this);
     }
     public int getId () {
         return id;
@@ -74,6 +78,15 @@ public class Camin {
     public int hashCode() {
         //cred ca trebuie si id aici
         return Objects.hash(nume, capacitatePerCamera, pret, nrCamereFete, nrCamereBaieti);
+    }
+
+    public static Camin getByName(String name) {
+        for(Camin c : camine) {
+            if(c.getNume().equals(name)) {
+                return c;
+            }
+        }
+        return null;
     }
 
     @Override

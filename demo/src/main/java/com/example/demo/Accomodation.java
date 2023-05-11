@@ -16,20 +16,20 @@ public class Accomodation {
     public void RepartizareStudentiInCamin () {
         //pentru fiecare facultate
         List<String> facultati = getFacultati();
-        System.out.println("Facultati: ");
-        System.out.println(facultati.toString());
+//        System.out.println("Facultati: ");
+//        System.out.println(facultati.toString());
         for (String facultate : facultati)
         {
             //selectam caminele la care facultatea a primit locuri
-            System.out.println("");
-            System.out.println("Camine la " + facultate);
+//            System.out.println("");
+//            System.out.println("Camine la " + facultate);
             List<Camin> camine = getCaminePentruFacultate(facultate);
-            System.out.println(camine.toString());
+//            System.out.println(camine.toString());
             //selectam studentii ordonati descrescator dupa medie
-            System.out.println("");
-            System.out.println("Studenti dupa medie:");
+//            System.out.println("");
+//            System.out.println("Studenti dupa medie:");
             List<Student> studenti = getStudentiDupaMedieDeLaFacultate(facultate);
-            System.out.println(studenti.toString());
+//            System.out.println(studenti.toString());
             for(Student student : studenti)
             {
                 for (String preferinta : student.getPreferinte())
@@ -53,9 +53,9 @@ public class Accomodation {
             preparedStatement.setInt(2, id_student);
             int rowsUpdated = preparedStatement.executeUpdate();
             if (rowsUpdated > 0) {
-                System.out.println("S-a actualizat cu succes caminul repartizat al studentului.");
+//                System.out.println("S-a actualizat cu succes caminul repartizat al studentului.");
             } else {
-                System.out.println("Nu s-a actualizat niciun rand din tabel.");
+//                System.out.println("Nu s-a actualizat niciun rand din tabel.");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -68,9 +68,9 @@ public class Accomodation {
             if (camin.getNume().equals(preferinta)) {
                 // Am găsit caminul, decrementăm nrLocuri si ii asociem studentului un camin
                 if(student.getGen().equals("fata")) {
-                    System.out.println("E fata");
+//                    System.out.println("E fata");
                     int nrLocuri = getNrLocuriFeteDeLaOFaculatePentruUnCamin(student.getFacultate(), camin.getId());
-                    System.out.println(nrLocuri);
+//                    System.out.println(nrLocuri);
                     if (nrLocuri > 0) {
                         decrementareNrLocuriFeteDeLaOFaculatePentruUnCamin(student.getFacultate(), camin.getId());
                         return true;
@@ -148,9 +148,9 @@ public class Accomodation {
             preparedStatement.setInt(2, idCamin);
             int rowsUpdated = preparedStatement.executeUpdate();
             if (rowsUpdated > 0) {
-                System.out.println("S-a actualizat cu succes numarul de locuri fete.");
+//                System.out.println("S-a actualizat cu succes numarul de locuri fete.");
             } else {
-                System.out.println("Nu s-a actualizat niciun rand din tabel.");
+//                System.out.println("Nu s-a actualizat niciun rand din tabel.");
             }
         } catch (SQLException e) {
             e.printStackTrace();
