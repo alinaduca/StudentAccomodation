@@ -7,26 +7,23 @@ import javafx.collections.FXCollections;
 import javafx.application.Application;
 import javafx.scene.layout.BorderPane;
 
+import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.stream.Collectors;
 import javafx.scene.canvas.Canvas;
 import javafx.event.EventHandler;
-import java.io.InputStreamReader;
 import javafx.event.ActionEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.geometry.Insets;
-import java.io.BufferedReader;
 import javafx.scene.control.*;
 import java.sql.SQLException;
 import javafx.geometry.Pos;
 import java.util.ArrayList;
-import java.sql.Connection;
-import java.io.PrintWriter;
-import java.io.IOException;
+
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.net.Socket;
@@ -47,12 +44,12 @@ public class ClientApplication extends Application {
     private String facultate;
     private String mesaj;
     private double medie;
-    private Camin camin1;
-    private Camin camin2;
-    private Camin camin3;
-    private Camin camin4;
-    private Camin camin5;
-    private List<Camin> preferinteCamine = new ArrayList<>();
+    private String camin1;
+    private String camin2;
+    private String camin3;
+    private String camin4;
+    private String camin5;
+    private List<String> preferinteCamine = new ArrayList<>();
 
     public void init() {
         try {
@@ -60,21 +57,10 @@ public class ClientApplication extends Application {
             socket = new Socket(host.getHostName(), port);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
-            out.println("hello");
+            out.println("get-facultati");
+//            objectIn = new ObjectInputStream(socket.getInputStream());
             System.out.println("Connected to server at " + host + ":" + port);
-//            System.out.println("Type 'exit' to quit, 'stop' to stop the server, or any other command you want server to execute.");
-//            BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
-//            while(true) {
-//                String input = keyboard.readLine();
-//                if(input == null || input.equalsIgnoreCase("exit")) {
-//                    break;
-//                }
-//                out.println(input);
-//                String response = in.readLine();
-//                System.out.println(response);
-//            }
-            socket.close();
-        } catch(IOException e) { }
+        } catch(IOException ignored) { }
     }
 
     @Override
@@ -86,18 +72,15 @@ public class ClientApplication extends Application {
         }
         this.port = 12345;
         init();
-        Connection connection = DatabaseConnection.getInstance().getConnection();
-        Accomodation accomodation = new Accomodation(connection);
-        accomodation.RepartizareStudentiInCamin();
         stage.setTitle("StudentAccomodation");
-        firstPage(stage, accomodation);
+        firstPage(stage);
     }
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
         launch();
     }
 
-    private int valid(String lastName, String firstName, String nrMatricol, String email, String telefon, String facultate, double medie, List<Camin> preferinte, String gen) {
+    private int valid(String lastName, String firstName, String nrMatricol, String email, String telefon, String facultate, double medie, List<String> preferinte, String gen) {
         if(lastName == null || lastName.length() < 2) {
             return 1;
         }
@@ -136,7 +119,7 @@ public class ClientApplication extends Application {
         return 0;
     }
 
-    private void firstPage(Stage stage, Accomodation accomodation) {
+    private void firstPage(Stage stage) {
         BorderPane root = new BorderPane();
         Button register = new Button("Înregistrare student");
         register.setFont(Font.font(20));
@@ -155,12 +138,16 @@ public class ClientApplication extends Application {
         register.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                draw(stage, accomodation);
+                try {
+                    draw(stage);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
     }
 
-    private void draw(Stage stage, Accomodation accomodation) {
+    private void draw(Stage stage) throws IOException {
         final double textFieldWidth = 200;
         BorderPane root = new BorderPane();
         Label numeLabel = new Label("Nume: ");
@@ -194,7 +181,25 @@ public class ClientApplication extends Application {
         HBox telefonPanel = new HBox(telefonLabel, telefonTextField);
 
         Label facultateLabel = new Label("Facultate: ");
-        List<String> list = accomodation.getFacultati();
+//        List<String> list = accomodation.getFacultati();
+        if(socket == null) {
+            socket = new Socket(host.getHostName(), port);
+        }
+        if(out == null) {
+            out = new PrintWriter(socket.getOutputStream(), true);
+        }
+        out.println("get-facultati");
+        String inputLine = in.readLine();
+        String[] parts = inputLine.split(";");
+        int i = 0;
+        List<String> list = new ArrayList<>();
+        for(String fac : parts) {
+            if (fac.contains("Facultatea")) {
+                list.add(fac);
+            }
+            System.out.println(fac);
+        }
+
         ObservableList<String> options = FXCollections.observableArrayList(list);
         ComboBox facultateComboBox = new ComboBox(options);
         facultateComboBox.setPrefWidth(textFieldWidth);
@@ -208,11 +213,11 @@ public class ClientApplication extends Application {
         HBox mediePanel = new HBox(medieLabel, medieTextField);
 
         Label preferinteLabel = new Label("Preferințe: ");
-        List<Camin> listCamine = new ArrayList<>();
-        List<Camin> listCamine1 = new ArrayList<>();
-        List<Camin> listCamine2 = new ArrayList<>();
-        List<Camin> listCamine3 = new ArrayList<>();
-        List<Camin> listCamine4 = new ArrayList<>();
+        List<String> listCamine = new ArrayList<>();
+        List<String> listCamine1 = new ArrayList<>();
+        List<String> listCamine2 = new ArrayList<>();
+        List<String> listCamine3 = new ArrayList<>();
+        List<String> listCamine4 = new ArrayList<>();
         ObservableList<String> optionsCamine = FXCollections.observableArrayList();
         ObservableList<String> optionsCamine1 = FXCollections.observableArrayList();
         ObservableList<String> optionsCamine2 = FXCollections.observableArrayList();
@@ -232,8 +237,31 @@ public class ClientApplication extends Application {
                 listCamine2.clear();
                 listCamine3.clear();
                 listCamine4.clear();
-                listCamine.addAll(accomodation.getCaminePentruFacultate(facultate));
-                optionsCamine.setAll(listCamine.stream().map(camin -> camin.getNume()).collect(Collectors.toList()));
+                out.println("get-camine-pentru-facultate:" + facultate);
+                List<String> list1 = new ArrayList<>();
+//                try {
+//                    list1 = (List<Camin>) objectIn.readObject();
+//                } catch (IOException | ClassNotFoundException e) {
+//                    throw new RuntimeException(e);
+//                }
+                String inputLine1;
+                try {
+                    inputLine1 = in.readLine();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                String[] parts = inputLine1.split(";");
+                for(String camin : parts) {
+                    if (camin.contains("C") || camin.contains("Aka") || camin.contains("Gau")) {
+                        list1.add(camin);
+                    }
+                    System.out.println(camin);
+                }
+
+
+                listCamine.addAll(list1);
+//                listCamine.addAll(accomodation.getCaminePentruFacultate(facultate));
+                optionsCamine.setAll(listCamine);
                 optionsCamine1.clear();
                 optionsCamine2.clear();
                 optionsCamine3.clear();
@@ -257,9 +285,9 @@ public class ClientApplication extends Application {
                 listCamine3.clear();
                 listCamine4.clear();
                 listCamine1.addAll(listCamine);
-                camin1 = Camin.getByName(t1);
+                camin1 = t1;
                 listCamine1.remove(camin1);
-                optionsCamine1.setAll(listCamine1.stream().map(camin -> camin.getNume()).collect(Collectors.toList()));
+                optionsCamine1.setAll(listCamine1);
                 optionsCamine2.clear();
                 optionsCamine3.clear();
                 optionsCamine4.clear();
@@ -278,10 +306,10 @@ public class ClientApplication extends Application {
                 listCamine3.clear();
                 listCamine4.clear();
                 listCamine2.addAll(listCamine1);
-                camin2 = Camin.getByName(t1);
+//                camin2 = Camin.getByName(t1);
                 listCamine2.remove(camin2);
                 listCamine2.remove(camin1);
-                optionsCamine2.setAll(listCamine2.stream().map(camin -> camin.getNume()).collect(Collectors.toList()));
+                optionsCamine2.setAll(listCamine2);
                 optionsCamine3.clear();
                 optionsCamine4.clear();
             }
@@ -299,11 +327,12 @@ public class ClientApplication extends Application {
                 listCamine3.clear();
                 listCamine4.clear();
                 listCamine3.addAll(listCamine2);
-                camin3 = Camin.getByName(t1);
+//                camin3 = Camin.getByName(t1);
+                camin3 = t1;
                 listCamine3.remove(camin3);
                 listCamine3.remove(camin2);
                 listCamine3.remove(camin1);
-                optionsCamine3.setAll(listCamine3.stream().map(camin -> camin.getNume()).collect(Collectors.toList()));
+                optionsCamine3.setAll(listCamine3);
                 optionsCamine4.clear();
             }
         });
@@ -319,19 +348,19 @@ public class ClientApplication extends Application {
             public void changed(ObservableValue ov, String t, String t1) {
                 listCamine4.clear();
                 listCamine3.addAll(listCamine);
-                camin4 = Camin.getByName(t1);
+                camin4 = t1;
                 listCamine4.remove(camin1);
                 listCamine4.remove(camin2);
                 listCamine4.remove(camin3);
                 listCamine4.remove(camin4);
-                optionsCamine4.setAll(listCamine4.stream().map(camin -> camin.getNume()).collect(Collectors.toList()));
+                optionsCamine4.setAll(listCamine4);
             }
         });
 
         camineComboBox4.valueProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue ov, String t, String t1) {
-                camin5 = Camin.getByName(t1);
+                camin5 = t1;
             }
         });
 
@@ -421,8 +450,8 @@ public class ClientApplication extends Application {
                 if(mesaj == null) {
                     switch(valid(lastName, firstName, nrMatricol, email, telefon, facultate, medie, preferinteCamine, gen)) {
                         case 0: mesaj = null;
-                                Student s = new Student(lastName, firstName, nrMatricol, email, telefon, facultate, medie, preferinteCamine, gen);
-                                firstPage(stage, accomodation);
+//                                Student s = new Student(lastName, firstName, nrMatricol, email, telefon, facultate, medie, preferinteCamine, gen);
+                                firstPage(stage);
                                 break;
                         case 1: mesaj = "Introduceți numele."; break;
                         case 2: mesaj = "Introduceți prenumele."; break;

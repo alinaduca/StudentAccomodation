@@ -1,6 +1,6 @@
 package com.example.server;
 
-import com.example.client.Camin;
+import com.example.server.Camin;
 
 import java.sql.Connection;
 import java.util.ArrayList;
