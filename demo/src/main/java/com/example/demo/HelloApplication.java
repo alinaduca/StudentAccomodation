@@ -92,6 +92,8 @@ public class HelloApplication extends Application {
 
     public static void main(String[] args) throws SQLException {
 //        Connection connection = DatabaseConnection.getInstance().getConnection();
+//        Accomodation accomodation = new Accomodation(connection);
+//        accomodation.RepartizareStudentiInCamin();
         launch();
     }
 }
