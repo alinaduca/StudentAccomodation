@@ -1,5 +1,6 @@
 package com.example.client;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -223,8 +224,9 @@ public class Accomodation {
                 String facultate = resultSet.getString("nume_facultate");
                 facultati.add(facultate);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException | NullPointerException e) {
+            System.out.println("ok");
+//            e.printStackTrace();
         }
         return facultati;
     }

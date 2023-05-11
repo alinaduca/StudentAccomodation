@@ -9,22 +9,32 @@ import javafx.scene.layout.BorderPane;
 import java.util.stream.Collectors;
 import javafx.scene.canvas.Canvas;
 import javafx.event.EventHandler;
+import java.io.InputStreamReader;
 import javafx.event.ActionEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.geometry.Insets;
+import java.io.BufferedReader;
 import javafx.scene.control.*;
 import java.sql.SQLException;
 import javafx.geometry.Pos;
 import java.util.ArrayList;
 import java.sql.Connection;
+import java.io.PrintWriter;
+import java.io.IOException;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import java.net.Socket;
 import java.util.List;
 
-public class HelloApplication extends Application {
+public class ClientApplication extends Application {
+    private String host;
+    private int port;
+    private Socket socket;
+    private BufferedReader in;
+    private PrintWriter out;
     private String firstName;
     private String lastName;
     private String nrMatricol;
@@ -41,15 +51,37 @@ public class HelloApplication extends Application {
     private Camin camin5;
     private List<Camin> preferinteCamine = new ArrayList<>();
 
+    public void init() {
+        try {
+            socket = new Socket(host, port);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            out = new PrintWriter(socket.getOutputStream(), true);
+            System.out.println("Connected to server at " + host + ":" + port);
+//            System.out.println("Type 'exit' to quit, 'stop' to stop the server, or any other command you want server to execute.");
+//            BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
+//            while(true) {
+//                String input = keyboard.readLine();
+//                if(input == null || input.equalsIgnoreCase("exit")) {
+//                    break;
+//                }
+//                out.println(input);
+//                String response = in.readLine();
+//                System.out.println(response);
+//            }
+//            socket.close();
+        } catch(IOException e) { }
+    }
+
     @Override
     public void start(Stage stage) throws SQLException {
+        this.host = "localhost";
+        this.port = 12345;
+        init();
         Connection connection = DatabaseConnection.getInstance().getConnection();
         Accomodation accomodation = new Accomodation(connection);
         accomodation.RepartizareStudentiInCamin();
-
         stage.setTitle("StudentAccomodation");
         firstPage(stage, accomodation);
-
     }
 
     public static void main(String[] args) throws SQLException {

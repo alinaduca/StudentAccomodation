@@ -23,7 +23,7 @@ public class DatabaseConnection
         catch (SQLException e)
         {
             System.out.println("You have this error:");
-            e.printStackTrace();
+//            e.printStackTrace();
         }
     }
 
