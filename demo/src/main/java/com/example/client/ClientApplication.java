@@ -6,11 +6,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.application.Application;
 import javafx.scene.layout.BorderPane;
-
-import java.io.*;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.stream.Collectors;
 import javafx.scene.canvas.Canvas;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
@@ -20,14 +16,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import java.sql.SQLException;
+import java.net.InetAddress;
 import javafx.geometry.Pos;
 import java.util.ArrayList;
-
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.net.Socket;
 import java.util.List;
+import java.io.*;
 
 public class ClientApplication extends Application {
     private int port;
@@ -58,13 +54,12 @@ public class ClientApplication extends Application {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
             out.println("get-facultati");
-//            objectIn = new ObjectInputStream(socket.getInputStream());
             System.out.println("Connected to server at " + host + ":" + port);
         } catch(IOException ignored) { }
     }
 
     @Override
-    public void start(Stage stage) throws SQLException {
+    public void start(Stage stage) {
         try {
             this.host = InetAddress.getLocalHost();
         } catch (UnknownHostException e) {
@@ -181,7 +176,6 @@ public class ClientApplication extends Application {
         HBox telefonPanel = new HBox(telefonLabel, telefonTextField);
 
         Label facultateLabel = new Label("Facultate: ");
-//        List<String> list = accomodation.getFacultati();
         if(socket == null) {
             socket = new Socket(host.getHostName(), port);
         }
@@ -194,7 +188,7 @@ public class ClientApplication extends Application {
         int i = 0;
         List<String> list = new ArrayList<>();
         for(String fac : parts) {
-            if (fac.contains("Facultatea")) {
+            if(fac.contains("Facultatea")) {
                 list.add(fac);
             }
             System.out.println(fac);
@@ -239,11 +233,6 @@ public class ClientApplication extends Application {
                 listCamine4.clear();
                 out.println("get-camine-pentru-facultate:" + facultate);
                 List<String> list1 = new ArrayList<>();
-//                try {
-//                    list1 = (List<Camin>) objectIn.readObject();
-//                } catch (IOException | ClassNotFoundException e) {
-//                    throw new RuntimeException(e);
-//                }
                 String inputLine1;
                 try {
                     inputLine1 = in.readLine();
@@ -252,15 +241,12 @@ public class ClientApplication extends Application {
                 }
                 String[] parts = inputLine1.split(";");
                 for(String camin : parts) {
-                    if (camin.contains("C") || camin.contains("Aka") || camin.contains("Gau")) {
+                    if(!camin.contains("Facultatea") && (camin.contains("C") || camin.contains("Aka") || camin.contains("Gau"))) {
                         list1.add(camin);
                     }
                     System.out.println(camin);
                 }
-
-
                 listCamine.addAll(list1);
-//                listCamine.addAll(accomodation.getCaminePentruFacultate(facultate));
                 optionsCamine.setAll(listCamine);
                 optionsCamine1.clear();
                 optionsCamine2.clear();
@@ -306,7 +292,7 @@ public class ClientApplication extends Application {
                 listCamine3.clear();
                 listCamine4.clear();
                 listCamine2.addAll(listCamine1);
-//                camin2 = Camin.getByName(t1);
+                camin2 = t1;
                 listCamine2.remove(camin2);
                 listCamine2.remove(camin1);
                 optionsCamine2.setAll(listCamine2);
@@ -327,7 +313,6 @@ public class ClientApplication extends Application {
                 listCamine3.clear();
                 listCamine4.clear();
                 listCamine3.addAll(listCamine2);
-//                camin3 = Camin.getByName(t1);
                 camin3 = t1;
                 listCamine3.remove(camin3);
                 listCamine3.remove(camin2);
@@ -402,7 +387,6 @@ public class ClientApplication extends Application {
         HBox genrePanel = new HBox(genreLabel, bifat);
 
         Canvas canvas = new Canvas(700, 600);
-
         VBox configPanel = new VBox(numePanel, prenumePanel,
                 nrMatricolPanel, emailPanel,
                 telefonPanel, facultatePanel,
