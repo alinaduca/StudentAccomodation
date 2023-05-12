@@ -19,16 +19,14 @@ public class Accomodation {
     public void RepartizareStudentiInCamin () {
         //pentru fiecare facultate
         List<String> facultati = getFacultati();
-        String facultate = "Facultatea de Chimie";
-//        for (String facultate : facultati)
-//        {
+        //String facultate = "Facultatea de Chimie";
         System.out.println("Facultati: ");
         System.out.println(facultati.toString());
- //       for (String facultate : facultati) {
+        for (String facultate : facultati) {
             //selectam caminele la care facultatea a primit locuri
             System.out.println("");
             System.out.println("Camine la " + facultate);
-            List<com.example.server.Camin> camine = getCaminePentruFacultate(facultate);
+            List<Camin> camine = getCaminePentruFacultate(facultate);
             System.out.println(camine.toString());
             //selectam studentii ordonati descrescator dupa medie
             System.out.println("");
@@ -48,7 +46,7 @@ public class Accomodation {
                         }
                     }
             }
-//        }
+        }
         }
 
         public void updateRepartizareCaminPentruStudent ( int id_student, String caminRepartizat){
