@@ -19,24 +19,22 @@ public class Accomodation {
     public void RepartizareStudentiInCamin () {
         //pentru fiecare facultate
         List<String> facultati = getFacultati();
-        System.out.println("Facultati: ");
-        System.out.println(facultati.toString());
-        String facultate = "Facultatea de Istorie";
+        String facultate = "Facultatea de Chimie";
 //        for (String facultate : facultati)
 //        {
-//        System.out.println("Facultati: ");
-//        System.out.println(facultati.toString());
+        System.out.println("Facultati: ");
+        System.out.println(facultati.toString());
  //       for (String facultate : facultati) {
             //selectam caminele la care facultatea a primit locuri
-//            System.out.println("");
-//            System.out.println("Camine la " + facultate);
+            System.out.println("");
+            System.out.println("Camine la " + facultate);
             List<com.example.server.Camin> camine = getCaminePentruFacultate(facultate);
-//            System.out.println(camine.toString());
+            System.out.println(camine.toString());
             //selectam studentii ordonati descrescator dupa medie
-//            System.out.println("");
-//            System.out.println("Studenti dupa medie:");
+            System.out.println("");
+            System.out.println("Studenti dupa medie:");
             List<Student> studenti = getStudentiDupaMedieDeLaFacultate(facultate);
-//            System.out.println(studenti.toString());
+            System.out.println(studenti.toString());
             for (Student student : studenti) {
                 System.out.println(student.toString());
                 for (String preferinta : student.getPreferinte())
