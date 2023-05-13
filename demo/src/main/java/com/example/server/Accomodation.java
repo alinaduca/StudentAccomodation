@@ -34,9 +34,9 @@ public class Accomodation {
             List<Student> studenti = getStudentiDupaMedieDeLaFacultate(facultate);
             System.out.println(studenti.toString());
             for (Student student : studenti) {
-                System.out.println(student.toString());
-                for (String preferinta : student.getPreferinte())
-                    {
+                if(NuERepartizat(student.getId())==true) {
+                    System.out.println(student.toString());
+                    for (String preferinta : student.getPreferinte()) {
                         System.out.println(preferinta);
                         //asta inca nu da bine dar cred ca e din cauza ca trebuie sa ma adaug cate cave in baza de date, ca sunt prea putine in facultati_camine
                         if (verificaDisponibilitatePreferinta(preferinta, camine, student) == true) {
@@ -45,6 +45,7 @@ public class Accomodation {
                             break;
                         }
                     }
+                }
             }
         }
         }
@@ -330,5 +331,32 @@ public class Accomodation {
                     }
                 }
                 return facultati;
+            }
+
+            boolean NuERepartizat (int id_student) {
+                PreparedStatement preparedStatement = null;
+                ResultSet resultSet = null;
+                try {
+                    preparedStatement = connection.prepareStatement("SELECT camin_repartizat FROM studenti1 WHERE id = ?");
+                    preparedStatement.setInt(1, id_student);
+                    resultSet = preparedStatement.executeQuery();
+                    if (resultSet.next())
+                    {
+                        String camin = resultSet.getString("camin_repartizat");
+                        if (camin!=null) return false;
+                        else return true;
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        //connection.close();
+                        resultSet.close();
+                        preparedStatement.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return false;
             }
         }

@@ -13,7 +13,8 @@
 --  preferinta3 VARCHAR2(30),
 --  preferinta4 VARCHAR2(30),
 --  preferinta5 VARCHAR2(30),
---  camin_repartizat VARCHAR2(30)
+--  camin_repartizat VARCHAR2(30),
+--  reinscris_la_camin INTEGER
 --)
 
 --CREATE TABLE camine (
@@ -35,6 +36,7 @@
 --)
 
 
+--inseram camine
 INSERT INTO camine (id, nume, capacitate_per_camera, pret, nr_camere_fete, nr_camere_baieti) VALUES (1, 'Akademos', 2, 650, 30, 20);
 INSERT INTO camine (id, nume, capacitate_per_camera, pret, nr_camere_fete, nr_camere_baieti) VALUES (2, 'Gaudeamus', 2, 600, 35, 25);
 INSERT INTO camine (id, nume, capacitate_per_camera, pret, nr_camere_fete, nr_camere_baieti) VALUES (3, 'C1', 3, 125, 30, 20);
@@ -51,7 +53,7 @@ INSERT INTO camine (id, nume, capacitate_per_camera, pret, nr_camere_fete, nr_ca
 
 
 
-
+--inseram camine pentru fiecare facultate
 set serveroutput on;
 DECLARE
   nume_facultate1 VARCHAR2(40);
@@ -171,7 +173,7 @@ END;
 
 
 
-
+--inseram studenti
 set serveroutput on;
 DECLARE
   TYPE camine_pe_facultate IS TABLE OF VARCHAR2(15);
@@ -298,9 +300,61 @@ BEGIN
 END;
 
 
+--Renunta cativa studenti la camine
+CREATE OR REPLACE PROCEDURE modificare_camin_repartizat
+IS
+  TYPE studenti_tab_type IS TABLE OF Studenti1.id%TYPE;
+  studenti_tab studenti_tab_type := studenti_tab_type();
+  ok INTEGER;
+  gen_student studenti1.gen%type;
+  facultate_student studenti1.facultate%type;
+  camin_student studenti1.camin_repartizat%type;
+  id_camin_student camine.id%type;
+BEGIN
+  -- Selectam studentii care au fost repartizati la un camin
+  SELECT id BULK COLLECT INTO studenti_tab FROM studenti1 WHERE camin_repartizat IS NOT NULL;
 
---commit;
+  -- Pentru fiecare student, gener?m un numar random între 0 ?i 1
+  FOR i IN 1..studenti_tab.COUNT LOOP
+    ok := ROUND(DBMS_RANDOM.VALUE(0, 1));
+    -- Daca ok este 1, actualizam camin_repartizat cu null pentru studentul respectiv
+    IF ok = 1 THEN
+      SELECT camin_repartizat INTO camin_student FROM studenti1 WHERE id = studenti_tab(i);
+      UPDATE studenti1 SET camin_repartizat = null WHERE id = studenti_tab(i);
+      SELECT gen, facultate INTO gen_student, facultate_student FROM studenti1 WHERE id = studenti_tab(i);
+      SELECT id INTO id_camin_student FROM camine WHERE nume = camin_student;
+      IF gen_student LIKE 'fata' THEN
+        UPDATE facultate_camine SET locuri_fete = locuri_fete + 1 WHERE nume_facultate = facultate_student AND id_camin = id_camin_student;
+        DBMS_OUTPUT.PUT_LINE('Fata cu id-ul ' || studenti_tab(i) || ' a renuntat la camin');
+      ELSIF gen_student LIKE 'baiat' THEN
+        UPDATE facultate_camine SET locuri_baieti = locuri_baieti + 1 WHERE nume_facultate = facultate_student AND id_camin = id_camin_student;
+        DBMS_OUTPUT.PUT_LINE('Baiatul cu id-ul ' || studenti_tab(i) || ' a renuntat la camin');
+      END IF;
+    END IF;
+  END LOOP;
+END;
+/
+SET SERVEROUTPUT ON;
+BEGIN
+  modificare_camin_repartizat();
+END;
+
+--verificare
+SELECT * FROM facultate_camine;
+SELECT * FROM studenti1 where camin_repartizat IS NOT NULL;
+
+
+--reinscrieri la camine
+
+
+
+
+
+
+
+
+commit;
 --select * from facultate_camine where nume_facultate='Facultatea de Chimie';
 --select * from studenti1 where camin_repartizat is not null;
---delete from facultate_camine;
---delete from studenti1;
+delete from facultate_camine;
+delete from studenti1;
