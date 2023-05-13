@@ -1,3 +1,6 @@
+drop table studenti1;
+drop table facultate_camine;
+
 --CREATE TABLE studenti1 (
 --  id INT NOT NULL PRIMARY KEY,
 --  nume VARCHAR2(15),
@@ -16,7 +19,7 @@
 --  camin_repartizat VARCHAR2(30),
 --  reinscris_la_camin INTEGER
 --)
-
+--
 --CREATE TABLE camine (
 --  id INT NOT NULL PRIMARY KEY,
 --  nume VARCHAR2(15),
@@ -300,6 +303,13 @@ BEGIN
 END;
 
 
+COMMIT;
+
+
+--verificare
+SELECT * FROM studenti1;
+SELECT * FROM facultate_camine;
+
 --Renunta cativa studenti la camine
 CREATE OR REPLACE PROCEDURE modificare_camin_repartizat
 IS
@@ -343,10 +353,45 @@ END;
 SELECT * FROM facultate_camine;
 SELECT * FROM studenti1 where camin_repartizat IS NOT NULL;
 
+commit;
 
 --reinscrieri la camine
+CREATE OR REPLACE PROCEDURE reinscriere_studenti
+IS
+  TYPE studenti_tab_type IS TABLE OF studenti1.id%TYPE;
+  studenti_tab studenti_tab_type := studenti_tab_type();
+  ok INTEGER;
+  gen_student studenti1.gen%type;
+  facultate_student studenti1.facultate%type;
+  camin_student studenti1.camin_repartizat%type;
+  id_camin_student camine.id%type;
+BEGIN
+  -- Selectam studentii care au fost repartizati la un camin
+  SELECT id BULK COLLECT INTO studenti_tab FROM studenti1 WHERE camin_repartizat IS NULL;
+
+  -- Pentru fiecare student, gener?m un numar random între 0 ?i 1
+  FOR i IN 1..studenti_tab.COUNT LOOP
+    ok := ROUND(DBMS_RANDOM.VALUE(0, 1));
+    -- Daca ok este 1, il reinscriem in turul 2
+    IF ok = 1 THEN
+      UPDATE studenti1 SET reinscris_la_camin = 1 WHERE id = studenti_tab(i);
+    ELSE 
+      UPDATE studenti1 SET reinscris_la_camin = 0 WHERE id = studenti_tab(i);
+    END IF;
+  END LOOP;
+END;
+/
+SET SERVEROUTPUT ON;
+BEGIN
+  reinscriere_studenti();
+END;
 
 
+--verificare
+select * from studenti1;
+select * from facultate_camine;
+select * from studenti1 where camin_repartizat is not null;
+ 
 
 
 
