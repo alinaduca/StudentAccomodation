@@ -1,6 +1,9 @@
 drop table studenti1;
 drop table facultate_camine;
 
+DELETE FROM studenti1;
+DELETE FROM facultate_camine;
+
 --CREATE TABLE studenti1 (
 --  id INT NOT NULL PRIMARY KEY,
 --  nume VARCHAR2(15),
@@ -198,7 +201,7 @@ DECLARE
   preferinta5_student VARCHAR2(15);
   preferinta_aleasa INTEGER;
 BEGIN
-  FOR i IN 1..10000 LOOP
+  FOR i IN 1..2000 LOOP
     preferinta1_student := null;
     preferinta2_student := null;
     preferinta3_student := null;
@@ -307,7 +310,7 @@ COMMIT;
 
 
 --verificare
-SELECT * FROM studenti1;
+SELECT * FROM studenti1 ;
 SELECT * FROM facultate_camine;
 
 --Renunta cativa studenti la camine
@@ -386,6 +389,8 @@ BEGIN
   reinscriere_studenti();
 END;
 
+
+commit;
 
 --verificare
 select * from studenti1;
