@@ -46,6 +46,7 @@ public class ClientApplication extends Application {
     private String camin4;
     private String camin5;
     private List<String> preferinteCamine = new ArrayList<>();
+    private static int accesari = 0;
 
     public void init() {
         try {
@@ -67,6 +68,20 @@ public class ClientApplication extends Application {
         }
         this.port = 12345;
         init();
+        if(socket == null) {
+            try {
+                socket = new Socket(host.getHostName(), port);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        if(out == null) {
+            try {
+                out = new PrintWriter(socket.getOutputStream(), true);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
         stage.setTitle("StudentAccomodation");
         firstPage(stage);
     }
@@ -95,7 +110,7 @@ public class ClientApplication extends Application {
             char c = telefon.charAt(i);
             String s = c + "";
             if(!"0123456789".contains(s)) {
-                System.out.println(s + ",");
+//                System.out.println(s + ",");
                 return 5;
             }
         }
@@ -120,10 +135,10 @@ public class ClientApplication extends Application {
         register.setFont(Font.font(20));
         Button check = new Button("Verifică repartizare");
         check.setFont(Font.font(20));
-        Button repartitie = new Button("Realizează repartizare");
-        repartitie.setFont(Font.font(20));
+        Button admin = new Button("Conectare administrator");
+        admin.setFont(Font.font(20));
 
-        VBox menu = new VBox(register, check, repartitie);
+        VBox menu = new VBox(register, check, admin);
         menu.setAlignment(Pos.CENTER);
         menu.setSpacing(70);
         root.setCenter(menu);
@@ -140,11 +155,146 @@ public class ClientApplication extends Application {
                 }
             }
         });
+
+        check.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                checkRepartition(stage);
+            }
+        });
+
+        admin.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                loginAdmin(stage);
+            }
+        });
+    }
+
+    private void checkRepartition(Stage stage) {
+        BorderPane root = new BorderPane();
+        Button backButton = new Button("Back");
+        backButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                loginAdmin(stage);
+            }
+        });
+
+
+        VBox mainPanel = new VBox();
+        HBox backPanel = new HBox(backButton);
+        root.setTop(backPanel);
+        root.setCenter(mainPanel);
+        stage.setTitle("StudentAccomodation");
+        stage.setScene(new Scene(root, 700, 600));
+        stage.show();
+    }
+
+    private void repartition(Stage stage) {
+        BorderPane root = new BorderPane();
+        Button backButton = new Button("Back");
+        backButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                loginAdmin(stage);
+            }
+        });
+        HBox backPanel = new HBox(backButton);
+        Button repartition = new Button("Repartizează");
+        Label mesajLabel = new Label();
+        VBox mainPanel = new VBox(repartition, mesajLabel);
+        mainPanel.setAlignment(Pos.CENTER);
+        repartition.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                mesajLabel.setText("Repartizarea a fost realizată cu succes.");
+                mesajLabel.setTextFill(Color.GREEN);
+            }
+        });
+        root.setTop(backPanel);
+        root.setCenter(mainPanel);
+        stage.setTitle("StudentAccomodation");
+        stage.setScene(new Scene(root, 700, 600));
+        stage.show();
+    }
+
+    private void loginAdmin(Stage stage) {
+        BorderPane root = new BorderPane();
+        Button backButton = new Button("Back");
+        backButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                firstPage(stage);
+            }
+        });
+
+        HBox backPanel = new HBox(backButton);
+        Label usernameLabel = new Label("Nume de utilizator: ");
+        Label passwordLabel = new Label("Parolă: ");
+        VBox labelArea = new VBox(usernameLabel, passwordLabel);
+        labelArea.setAlignment(Pos.CENTER_RIGHT);
+        labelArea.setSpacing(15);
+
+        TextField usernameField = new TextField();
+        PasswordField passwordField = new PasswordField();
+        VBox textArea = new VBox(usernameField, passwordField);
+        textArea.setAlignment(Pos.CENTER_LEFT);
+        textArea.setSpacing(10);
+
+        HBox loginPanel = new HBox(labelArea, textArea);
+        loginPanel.setAlignment(Pos.CENTER);
+
+        Button connect = new Button("Autentificare");
+        Label mesajLabel = new Label();
+        VBox connectLabel = new VBox(connect, mesajLabel);
+        connectLabel.setAlignment(Pos.CENTER);
+        connectLabel.setSpacing(10);
+
+        VBox connectPanel = new VBox(loginPanel, connectLabel);
+        connectPanel.setSpacing(50);
+        connectPanel.setAlignment(Pos.CENTER);
+
+        connect.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                String username = usernameField.getText();
+                String password = passwordField.getText();
+                if(username.equals("admin") && password.equals("admin")) {
+                    repartition(stage);
+                }
+                else {
+                    if(!username.equals("admin")) {
+                        mesajLabel.setText("Cont inexistent");
+                        mesajLabel.setTextFill(Color.RED);
+                    }
+                    else {
+                        mesajLabel.setText("Parolă incorectă");
+                        mesajLabel.setTextFill(Color.RED);
+                    }
+                }
+            }
+        });
+        root.setTop(backPanel);
+        root.setCenter(connectPanel);
+        stage.setTitle("StudentAccomodation");
+        stage.setScene(new Scene(root, 700, 600));
+        stage.show();
     }
 
     private void draw(Stage stage) throws IOException {
         final double textFieldWidth = 200;
         BorderPane root = new BorderPane();
+        Button backButton = new Button("Back");
+        backButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                firstPage(stage);
+            }
+        });
+
+        HBox backPanel = new HBox(backButton);
+
         Label numeLabel = new Label("Nume: ");
         TextField numeTextField = new TextField();
         numeTextField.setPrefWidth(textFieldWidth);
@@ -176,22 +326,20 @@ public class ClientApplication extends Application {
         HBox telefonPanel = new HBox(telefonLabel, telefonTextField);
 
         Label facultateLabel = new Label("Facultate: ");
-        if(socket == null) {
-            socket = new Socket(host.getHostName(), port);
-        }
-        if(out == null) {
-            out = new PrintWriter(socket.getOutputStream(), true);
-        }
+
         out.println("get-facultati");
         String inputLine = in.readLine();
         String[] parts = inputLine.split(";");
         int i = 0;
+        if(accesari == 0) {
+            inputLine = in.readLine();
+            accesari = 1;
+        }
         List<String> list = new ArrayList<>();
         for(String fac : parts) {
             if(fac.contains("Facultatea")) {
                 list.add(fac);
             }
-            System.out.println(fac);
         }
 
         ObservableList<String> options = FXCollections.observableArrayList(list);
@@ -244,7 +392,6 @@ public class ClientApplication extends Application {
                     if(!camin.contains("Facultatea") && (camin.contains("C") || camin.contains("Aka") || camin.contains("Gau"))) {
                         list1.add(camin);
                     }
-                    System.out.println(camin);
                 }
                 listCamine.addAll(list1);
                 optionsCamine.setAll(listCamine);
@@ -332,7 +479,7 @@ public class ClientApplication extends Application {
             @Override
             public void changed(ObservableValue ov, String t, String t1) {
                 listCamine4.clear();
-                listCamine3.addAll(listCamine);
+                listCamine4.addAll(listCamine);
                 camin4 = t1;
                 listCamine4.remove(camin1);
                 listCamine4.remove(camin2);
@@ -381,7 +528,6 @@ public class ClientApplication extends Application {
                 }
             }
         });
-
 
         VBox bifat = new VBox(rb1, rb2);
         bifat.setPadding(new Insets(0, 0, 0, 10));
@@ -455,6 +601,7 @@ public class ClientApplication extends Application {
             }
         });
         controlPanel.setAlignment(Pos.CENTER);
+        root.setTop(backPanel);
         root.setCenter(configPanel);
         root.setBottom(controlPanel);
         stage.setTitle("StudentAccomodation");
