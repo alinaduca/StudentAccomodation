@@ -381,6 +381,8 @@ public class ClientApplication extends Application {
                 }
             }
         });
+
+
         VBox bifat = new VBox(rb1, rb2);
         bifat.setPadding(new Insets(0, 0, 0, 10));
         bifat.setSpacing(5);
