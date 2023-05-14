@@ -17,10 +17,10 @@ public class Student {
     private String facultate;
     private String camin_repartizat;
     private double medie;
-    private List<Camin> preferinte;
+    private List<String> preferinte;
     Connection connection;
 
-    public Student(String lastName, String firstName, String nrMatricol, String email, String telefon, String facultate, double medie, List<Camin> preferinte, String gen) {
+    public Student(String lastName, String firstName, String nrMatricol, String email, String telefon, String facultate, double medie, List<String> preferinte, String gen) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.gen = gen;
@@ -34,7 +34,7 @@ public class Student {
         this.camin_repartizat = null;
     }
 
-    public Student(int id, String firstName, String lastName, String gen, String nrMatricol, String email, String telefon, String facultate, double medie, List<Camin> preferinte, Connection connection) {
+    public Student(int id, String firstName, String lastName, String gen, String nrMatricol, String email, String telefon, String facultate, double medie, List<String> preferinte, Connection connection) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -117,11 +117,11 @@ public class Student {
         this.medie = medie;
     }
 
-    public List<Camin> getPreferinte() {
+    public List<String> getPreferinte() {
         return preferinte;
     }
 
-    public void setPreferinte(List<Camin> preferinte) {
+    public void setPreferinte(List<String> preferinte) {
         this.preferinte = preferinte;
     }
 

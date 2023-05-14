@@ -90,6 +90,6 @@ public class Camin {
 
     @Override
     public String toString() {
-        return nume;
+        return nume + "id: " + id;
     }
 }
