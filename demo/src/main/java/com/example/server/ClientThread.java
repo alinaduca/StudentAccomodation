@@ -1,7 +1,5 @@
 package com.example.server;
 
-import com.example.server.Camin;
-
 import java.io.*;
 import java.net.Socket;
 import java.util.List;
@@ -53,19 +51,41 @@ public class ClientThread extends Thread {
                         }
                         System.out.println(mesaj);
                         out.println(mesaj);
-//                        objectOut.writeObject(list);
                     }
                     else {
-                        String[] parts = inputLine.split(":");
-                        if(parts[0].equals("get-camine-pentru-facultate")) {
-                            List<Camin> list = accomodation.getCaminePentruFacultate(parts[1]);
+                        System.out.println(inputLine);
+                        if(inputLine.equals("get-camine")) {
+                            List<Camin> list2 = accomodation.getCamine();
                             String mesaj = null;
-                            for(Camin camin : list) {
+                            for(Camin camin : list2) {
                                 mesaj = mesaj + ";" + camin.getNume();
                             }
                             System.out.println(mesaj);
                             out.println(mesaj);
-//                            objectOut.writeObject(list);
+                        }
+                        else {
+                            if(inputLine.equals("repartizeaza")) {
+                                accomodation.RepartizareStudentiInCamin(); //Repartizare2StudentiInCamin dupa reinscrieri
+                                out.println("ok");
+                            }
+                            else {
+                                if(inputLine.equals("repartizeaza2")) {
+                                    accomodation.Repartizare2StudentiInCamin();
+                                    out.println("ok");
+                                }
+                                else {
+                                    String[] parts = inputLine.split(":");
+                                    if(parts[0].equals("get-camine-pentru-facultate")) {
+                                        List<Camin> list = accomodation.getCaminePentruFacultate(parts[1]);
+                                        String mesaj = null;
+                                        for(Camin camin : list) {
+                                            mesaj = mesaj + ";" + camin.getNume();
+                                        }
+                                        System.out.println(mesaj);
+                                        out.println(mesaj);
+                                    }
+                                }
+                            }
                         }
                     }
                 }

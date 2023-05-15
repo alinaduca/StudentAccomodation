@@ -45,7 +45,7 @@ public class ClientApplication extends Application {
     private String camin3;
     private String camin4;
     private String camin5;
-    private List<String> preferinteCamine = new ArrayList<>();
+    private List<String> preferinteCamine;
     private static int accesari = 0;
 
     public void init() {
@@ -171,18 +171,37 @@ public class ClientApplication extends Application {
         });
     }
 
+    private static boolean repartizareTurul1 = false;
+    private static boolean repartizareTurul2 = false;
+
     private void checkRepartition(Stage stage) {
         BorderPane root = new BorderPane();
+
         Button backButton = new Button("Back");
         backButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                loginAdmin(stage);
+                firstPage(stage);
             }
         });
+        Label nrMatricolLabel = new Label("Introduceți numărul matricol: ");
+        TextField nrMatricolTextField = new TextField();
+        Button verificaButton = new Button("Verifică");
+        verificaButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                String nrMat = nrMatricolTextField.getText();
 
+            }
+        });
+        HBox verifica = new HBox(verificaButton);
+        verifica.setAlignment(Pos.CENTER);
+        HBox nrMatPanel = new HBox(nrMatricolLabel, nrMatricolTextField);
+        nrMatPanel.setAlignment(Pos.CENTER);
 
-        VBox mainPanel = new VBox();
+        VBox mainPanel = new VBox(nrMatPanel, verifica);
+//        mainPanel.setAlignment(Pos.CENTER);
+        mainPanel.setSpacing(20);
         HBox backPanel = new HBox(backButton);
         root.setTop(backPanel);
         root.setCenter(mainPanel);
@@ -192,6 +211,8 @@ public class ClientApplication extends Application {
     }
 
     private void repartition(Stage stage) {
+        final boolean[] extraselectionPanelAlreadyAdded = {false};
+        final boolean[] saveCriteriaSelected = {false};
         BorderPane root = new BorderPane();
         Button backButton = new Button("Back");
         backButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -200,19 +221,181 @@ public class ClientApplication extends Application {
                 loginAdmin(stage);
             }
         });
+
         HBox backPanel = new HBox(backButton);
-        Button repartition = new Button("Repartizează");
+        Button repartition = new Button("Repartizează (turul 1)");
+        Button repartition2 = new Button("Repartizează (turul 2)");
         Label mesajLabel = new Label();
-        VBox mainPanel = new VBox(repartition, mesajLabel);
-        mainPanel.setAlignment(Pos.CENTER);
         repartition.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                mesajLabel.setText("Repartizarea a fost realizată cu succes.");
-                mesajLabel.setTextFill(Color.GREEN);
+                if(!repartizareTurul1) {
+                    mesajLabel.setText("Repartizarea a fost realizată cu succes.");
+                    mesajLabel.setTextFill(Color.GREEN);
+                    repartizareTurul1 = true;
+                }
+                else {
+                    if(!repartizareTurul2) {
+                        mesajLabel.setText("Repartizarea pentru turul 1 a fost realizată, repartizați pentru turul 2.");
+                        mesajLabel.setTextFill(Color.RED);
+                    }
+                    else {
+                        mesajLabel.setText("Repartizările au fost efectuate.");
+                        mesajLabel.setTextFill(Color.RED);
+                    }
+                }
             }
         });
+
+        repartition2.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(!repartizareTurul1) {
+                    mesajLabel.setText("Nu ați efectuat repartizarea pentru turul 1.");
+                    mesajLabel.setTextFill(Color.RED);
+                }
+                else {
+                    if(!repartizareTurul2) {
+                        mesajLabel.setText("Repartizarea a fost realizată cu succes.");
+                        mesajLabel.setTextFill(Color.GREEN);
+                        repartizareTurul2 = true;
+                    }
+                    else {
+                        mesajLabel.setText("Repartizările au fost efectuate.");
+                        mesajLabel.setTextFill(Color.RED);
+                    }
+                }
+            }
+        });
+
+        Label criteriuLabel = new Label("Alege un criteriu de salvare a listei: ");
+        List list = new ArrayList<>(List.of("Facultăți", "Cămine"));
+        ObservableList<String> options = FXCollections.observableArrayList(list);
+        ComboBox criterii = new ComboBox(options);
+        HBox savePanel = new HBox(criteriuLabel, criterii);
+
+        Label criteriuAlesLabel = new Label();
+        List list1 = new ArrayList<>();
+        ObservableList<String> options1 = FXCollections.observableArrayList(list);
+        ComboBox criterii1 = new ComboBox(options1);
+
+        HBox selectieSuplimentara = new HBox(criteriuAlesLabel, criterii1);
+        selectieSuplimentara.setAlignment(Pos.CENTER);
+        selectieSuplimentara.setPadding(new Insets(10, 0, 0, 0));
+        VBox campSelectii = new VBox(savePanel);
+        criterii.valueProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue ov, String t, String t1) {
+                mesajLabel.setText("");
+                saveCriteriaSelected[0] = false;
+                if(t1.equals("Facultăți")) {
+                    out.println("get-facultati");
+                    String inputLine = null;
+                    try {
+                        inputLine = in.readLine();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    String[] parts = inputLine.split(";");
+                    int i = 0;
+                    if(accesari == 0) {
+                        try {
+                            inputLine = in.readLine();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        accesari = 1;
+                    }
+                    list1.clear();
+                    for(String fac : parts) {
+                        if(fac.contains("Facultatea")) {
+                            list1.add(fac);
+                        }
+                    }
+                    options1.setAll(list1);
+                    criteriuAlesLabel.setText("Alege facultatea: ");
+                    if(!extraselectionPanelAlreadyAdded[0]) {
+                        campSelectii.getChildren().add(selectieSuplimentara);
+                        extraselectionPanelAlreadyAdded[0] = true;
+                    }
+                }
+                else {
+                    out.println("get-camine");
+                    String inputLine = null;
+                    try {
+                        inputLine = in.readLine();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    if(inputLine.contains("Facultatea")) {
+                        out.println("get-camine");
+                        try {
+                            inputLine = in.readLine();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    System.out.println(inputLine);
+                    String[] parts = inputLine.split(";");
+                    int i = 0;
+                    if(accesari == 0) {
+                        try {
+                            inputLine = in.readLine();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        accesari = 1;
+                    }
+                    list1.clear();
+                    for(String camin : parts) {
+                        if(camin.contains("C") || camin.contains("Aka") || camin.contains("Gau")) {
+                            list1.add(camin);
+                        }
+                    }
+                    options1.setAll(list1);
+                    criteriuAlesLabel.setText("Alege căminul: ");
+                    if(!extraselectionPanelAlreadyAdded[0]) {
+                        campSelectii.getChildren().add(selectieSuplimentara);
+                        extraselectionPanelAlreadyAdded[0] = true;
+                    }
+                }
+            }
+        });
+
+        criterii1.valueProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observable, Object t, Object t1) {
+                saveCriteriaSelected[0] = true;
+            }
+        });
+
+        Button saveList = new Button("Salvează listă");
+        saveList.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                mesajLabel.setText("");
+                if(!saveCriteriaSelected[0]) {
+                    mesajLabel.setText("Completați criteriile de realizare a listei.");
+                    mesajLabel.setTextFill(Color.RED);
+                }
+                else {
+                    mesajLabel.setText("Lista a fost salvată cu succes.");
+                    mesajLabel.setTextFill(Color.GREEN);
+                }
+            }
+        });
+
+        savePanel.setAlignment(Pos.CENTER);
+
+        VBox mainPanel = new VBox(repartition, repartition2, campSelectii, saveList);
+        mainPanel.setSpacing(10);
+        mainPanel.setAlignment(Pos.CENTER);
+        HBox bottomPanel = new HBox(mesajLabel);
+        bottomPanel.setAlignment(Pos.CENTER);
+        bottomPanel.setSpacing(20);
+        bottomPanel.setPadding(new Insets(0, 0, 20, 0));
         root.setTop(backPanel);
+        root.setBottom(bottomPanel);
         root.setCenter(mainPanel);
         stage.setTitle("StudentAccomodation");
         stage.setScene(new Scene(root, 700, 600));
@@ -283,6 +466,20 @@ public class ClientApplication extends Application {
     }
 
     private void draw(Stage stage) throws IOException {
+        firstName = null;
+        lastName = null;
+        nrMatricol = null;
+        email = null;
+        telefon = null;
+        gen = null;
+        facultate = null;
+        medie = 0;
+        camin1 = null;
+        camin2 = null;
+        camin3 = null;
+        camin4 = null;
+        camin5 = null;
+        preferinteCamine = new ArrayList<>();
         final double textFieldWidth = 200;
         BorderPane root = new BorderPane();
         Button backButton = new Button("Back");
@@ -399,6 +596,12 @@ public class ClientApplication extends Application {
                 optionsCamine2.clear();
                 optionsCamine3.clear();
                 optionsCamine4.clear();
+                preferinteCamine = new ArrayList<>();
+                camin1 = null;
+                camin2 = null;
+                camin3 = null;
+                camin4 = null;
+                camin5 = null;
             }
         });
         Label pref1 = new Label(" 1.) ");

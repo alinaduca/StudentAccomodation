@@ -144,7 +144,7 @@ public class Accomodation {
         }
     }
 
-    public int getNrLocuriFeteDeLaOFaculatePentruUnCamin (String numeFacultate,int idCamin){
+    public int getNrLocuriFeteDeLaOFaculatePentruUnCamin (String numeFacultate, int idCamin){
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
@@ -415,5 +415,34 @@ public class Accomodation {
                 e.printStackTrace();
             }
         }
+    }
+    public List<Camin> getCamine() {
+        List<Camin> camine = new ArrayList<>();
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            preparedStatement = connection.prepareStatement("SELECT * FROM camine");
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String nume = resultSet.getString("nume");
+                int capacitatePerCamera = resultSet.getInt("capacitate_per_camera");
+                int pret = resultSet.getInt("pret");
+                int nrCamereFete = resultSet.getInt("nr_camere_fete");
+                int nrCamereBaieti = resultSet.getInt("nr_camere_baieti");
+                Camin camin = new Camin(id, nume, capacitatePerCamera, pret, nrCamereFete, nrCamereBaieti);
+                camine.add(camin);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                preparedStatement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return camine;
     }
 }
