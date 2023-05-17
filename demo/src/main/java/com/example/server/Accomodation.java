@@ -15,10 +15,10 @@ public class Accomodation {
         this.connection = connection;
     }
 
-    public void ApelareMetoda ()
+    public void ApelareCSVFacultate (String nume_facultate)
     {
-        String procedureName = "modificare_camin_repartizat";
-        String callStatement = "{ call " + procedureName + "() }";
+        String procedureName = "export_student_data_facultate";
+        String callStatement = "{ call " + procedureName + "('" + nume_facultate + "') }";
         try {
             CallableStatement callableStatement = connection.prepareCall(callStatement);
             callableStatement.execute();
@@ -28,6 +28,21 @@ public class Accomodation {
             System.out.println("A apărut o eroare la apelarea procedurii Oracle: " + e.getMessage());
         }
     }
+
+    public void ApelareCSVCamin (String nume_camin)
+    {
+        String procedureName = "export_student_data_camin";
+        String callStatement = "{ call " + procedureName + "('" + nume_camin + "') }";
+        try {
+            CallableStatement callableStatement = connection.prepareCall(callStatement);
+            callableStatement.execute();
+            callableStatement.close();
+            System.out.println("Procedura Oracle a fost apelată cu succes!");
+        } catch (Exception e) {
+            System.out.println("A apărut o eroare la apelarea procedurii Oracle: " + e.getMessage());
+        }
+    }
+
     public void RepartizareStudentiInCamin () {
         //pentru fiecare facultate
         List<String> facultati = getFacultati();

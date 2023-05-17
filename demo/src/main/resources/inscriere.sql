@@ -1,8 +1,8 @@
-DROP TABLE camine;
-/
 drop table studenti1;
 /
 drop table facultate_camine;
+/
+DROP TABLE camine;
 /
 
 CREATE TABLE studenti1 (
@@ -25,14 +25,14 @@ CREATE TABLE studenti1 (
 /
 
 CREATE OR REPLACE TYPE adresa AS OBJECT
-(strada varchar2(20),
+(strada varchar2(30),
  nr varchar2(10)
 );
 /
 
 CREATE TABLE camine (
   id INT NOT NULL PRIMARY KEY,
-  nume VARCHAR2(15),
+  nume VARCHAR2(20),
   capacitate_per_camera INTEGER,
   pret INTEGER, 
   adresa_camin adresa
@@ -256,7 +256,7 @@ BEGIN
     ELSE
       gen_student := 'fata';
     END IF;
-    nr_matricol_student := '1234567' || TO_CHAR(i, 'FM00000');
+    nr_matricol_student := 'RO1234567' || TO_CHAR(i, 'FM00000');
     email_student := 'student' || i || '@example.com';
     telefon_student := '07' || TO_CHAR(i, 'FM00000000');
     medie_student := TRUNC(DBMS_RANDOM.VALUE(5, 10) * 100) / 100;
@@ -345,6 +345,112 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('Inserted rows.');
 END;
 /
+
+CREATE OR REPLACE PROCEDURE export_student_data_facultate(nume_facultate IN VARCHAR2) AS
+  v_fisier UTL_FILE.FILE_TYPE;
+  v_id studenti1.id%TYPE;
+  v_nume studenti1.nume%TYPE;
+  v_prenume studenti1.prenume%TYPE;
+  v_gen studenti1.gen%TYPE;
+  v_nr_matricol studenti1.nr_matricol%TYPE;
+  v_email studenti1.email%TYPE;
+  v_telefon studenti1.telefon%TYPE;
+  v_facultate studenti1.facultate%TYPE;
+  v_medie studenti1.medie%TYPE;
+  v_preferinta1 studenti1.preferinta1%TYPE;
+  v_preferinta2 studenti1.preferinta2%TYPE;
+  v_preferinta3 studenti1.preferinta3%TYPE;
+  v_preferinta4 studenti1.preferinta4%TYPE;
+  v_preferinta5 studenti1.preferinta5%TYPE;
+  v_camin_repartizat studenti1.camin_repartizat%TYPE;
+BEGIN
+  v_fisier := UTL_FILE.FOPEN('MYDIR', TRIM(nume_facultate) || '.csv', 'W');
+
+  -- Scrierea antetului în fi?ierul CSV
+  UTL_FILE.PUTF(v_fisier, 'ID,Nume,Prenume,Gen,Nr Matricol,Email,Telefon,Facultate,Medie,Camin Repartizat');
+  UTL_FILE.NEW_LINE(v_fisier);
+
+  -- Iterarea prin înregistr?rile tabelului studenti1 ?i scrierea lor în fi?ierul CSV
+  FOR rec IN (SELECT * FROM studenti1 WHERE camin_repartizat IS NOT NULL AND facultate LIKE nume_facultate ORDER BY medie DESC) LOOP
+    v_id := rec.id;
+    v_nume := rec.nume;
+    v_prenume := rec.prenume;
+    v_gen := rec.gen;
+    v_nr_matricol := rec.nr_matricol;
+    v_email := rec.email;
+    v_telefon := rec.telefon;
+    v_facultate := rec.facultate;
+    v_medie := rec.medie;
+    v_preferinta1 := rec.preferinta1;
+    v_preferinta2 := rec.preferinta2;
+    v_preferinta3 := rec.preferinta3;
+    v_preferinta4 := rec.preferinta4;
+    v_preferinta5 := rec.preferinta5;
+    v_camin_repartizat := rec.camin_repartizat;
+
+    UTL_FILE.PUTF(v_fisier, v_id || ',' || v_nume || ',' || v_prenume || ',' || v_gen || ',' || v_nr_matricol || ',' ||
+                          v_email || ',' || ('+4' || v_telefon) || ',' || v_facultate || ',' || v_medie || ','  ||
+                          v_camin_repartizat);
+    UTL_FILE.NEW_LINE(v_fisier);
+  END LOOP;
+
+  UTL_FILE.FCLOSE(v_fisier);
+END;
+/
+
+CREATE OR REPLACE PROCEDURE export_student_data_camin(nume_camin IN VARCHAR2) AS
+  v_fisier UTL_FILE.FILE_TYPE;
+  v_id studenti1.id%TYPE;
+  v_nume studenti1.nume%TYPE;
+  v_prenume studenti1.prenume%TYPE;
+  v_gen studenti1.gen%TYPE;
+  v_nr_matricol studenti1.nr_matricol%TYPE;
+  v_email studenti1.email%TYPE;
+  v_telefon studenti1.telefon%TYPE;
+  v_facultate studenti1.facultate%TYPE;
+  v_medie studenti1.medie%TYPE;
+  v_preferinta1 studenti1.preferinta1%TYPE;
+  v_preferinta2 studenti1.preferinta2%TYPE;
+  v_preferinta3 studenti1.preferinta3%TYPE;
+  v_preferinta4 studenti1.preferinta4%TYPE;
+  v_preferinta5 studenti1.preferinta5%TYPE;
+  v_camin_repartizat studenti1.camin_repartizat%TYPE;
+BEGIN
+  v_fisier := UTL_FILE.FOPEN('MYDIR', TRIM(nume_camin) || '.csv', 'W');
+
+  -- Scrierea antetului în fi?ierul CSV
+  UTL_FILE.PUTF(v_fisier, 'ID,Nume,Prenume,Gen,Nr Matricol,Email,Telefon,Facultate,Medie,Camin Repartizat');
+  UTL_FILE.NEW_LINE(v_fisier);
+
+  -- Iterarea prin înregistr?rile tabelului studenti1 ?i scrierea lor în fi?ierul CSV
+  FOR rec IN (SELECT * FROM studenti1 WHERE camin_repartizat IS NOT NULL AND camin_repartizat LIKE nume_camin ORDER BY medie DESC) LOOP
+    v_id := rec.id;
+    v_nume := rec.nume;
+    v_prenume := rec.prenume;
+    v_gen := rec.gen;
+    v_nr_matricol := rec.nr_matricol;
+    v_email := rec.email;
+    v_telefon := rec.telefon;
+    v_facultate := rec.facultate;
+    v_medie := rec.medie;
+    v_preferinta1 := rec.preferinta1;
+    v_preferinta2 := rec.preferinta2;
+    v_preferinta3 := rec.preferinta3;
+    v_preferinta4 := rec.preferinta4;
+    v_preferinta5 := rec.preferinta5;
+    v_camin_repartizat := rec.camin_repartizat;
+
+    UTL_FILE.PUTF(v_fisier, v_id || ',' || v_nume || ',' || v_prenume || ',' || v_gen || ',' || v_nr_matricol || ',' ||
+                          v_email || ',' || ('+4' || v_telefon) || ',' || v_facultate || ',' || v_medie || ','  ||
+                          v_camin_repartizat);
+    UTL_FILE.NEW_LINE(v_fisier);
+  END LOOP;
+
+  UTL_FILE.FCLOSE(v_fisier);
+END;
+/
+
+
 
 COMMIT;
 /
