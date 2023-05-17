@@ -16,7 +16,7 @@ public class ClientThread extends Thread {
         this.clientSocket = clientSocket;
         this.server = server;
         this.accomodation = accomodation;
-        System.out.println(accomodation);
+//        System.out.println(accomodation);
         try {
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             out = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -49,7 +49,7 @@ public class ClientThread extends Thread {
                         for(String facultate : list) {
                             mesaj = mesaj + ";" + facultate;
                         }
-                        System.out.println(mesaj);
+//                        System.out.println(mesaj);
                         out.println(mesaj);
                     }
                     else {
@@ -100,21 +100,10 @@ public class ClientThread extends Thread {
                                         String camin4 = parts[11];
                                         String camin5 = parts[12];
                                         String gen = parts[13];
-                                        System.out.println("lastName:" + lastName);
-                                        System.out.println("firstName:" + firstName);
-                                        System.out.println("nrMatricol:" + nrMatricol);
-                                        System.out.println("email:" + email);
-                                        System.out.println("telefon:" + telefon);
-                                        System.out.println("facultate:" + facultate);
-                                        System.out.println("medie:" + medie);
-                                        System.out.println("camin1:" + camin1);
-                                        System.out.println("camin2:" + camin2);
-                                        System.out.println("camin3:" + camin3);
-                                        System.out.println("camin4:" + camin4);
-                                        System.out.println("camin5:" + camin5);
-                                        System.out.println("gen:" + gen);
-//                                        inserareStudent();
-
+                                        accomodation.inserareStudent(lastName, firstName, nrMatricol, email, telefon, facultate, medie, gen, camin1, camin2, camin3, camin4, camin5);
+                                    }
+                                    else if(parts[0].equals("verifica-nr-matricol")) {
+                                        out.println(accomodation.verificareRepartitie(parts[1]));
                                     }
                                 }
                             }

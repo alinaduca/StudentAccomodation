@@ -458,4 +458,126 @@ public class Accomodation {
             }
         }
     }
+
+    public void inserareStudent(String lastName, String firstName, String nrMatricol, String email, String telefon, String facultate, double medie, String gen, String camin1, String camin2, String camin3, String camin4, String camin5) {
+        if(camin1.equals("null")) {
+            camin1 = null;
+        }
+        if(camin2.equals("null")) {
+            camin2 = null;
+        }
+        if(camin3.equals("null")) {
+            camin3 = null;
+        }
+        if(camin4.equals("null")) {
+            camin4 = null;
+        }
+        if(camin5.equals("null")) {
+            camin5 = null;
+        }
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        int id = 0;
+        try {
+            preparedStatement = connection.prepareStatement("SELECT MAX(id)+1 FROM studenti1");
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                id = resultSet.getInt("MAX(id)+1");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                preparedStatement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        preparedStatement = null;
+        try {
+            String sqlcommand = "INSERT INTO studenti1 (id, nume, prenume, gen, nr_matricol, email, telefon, facultate, medie, preferinta1, preferinta2, preferinta3, preferinta4, preferinta5) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            preparedStatement = connection.prepareStatement(sqlcommand);
+            preparedStatement.setInt(1, id);
+            preparedStatement.setString(2, lastName);
+            preparedStatement.setString(3, firstName);
+            preparedStatement.setString(4, gen);
+            preparedStatement.setString(5, nrMatricol);
+            preparedStatement.setString(6, email);
+            preparedStatement.setString(7, telefon);
+            preparedStatement.setString(8, facultate);
+            preparedStatement.setDouble(9, medie);
+            preparedStatement.setString(10, camin1);
+            preparedStatement.setString(11, camin2);
+            preparedStatement.setString(12, camin3);
+            preparedStatement.setString(13, camin4);
+            preparedStatement.setString(14, camin5);
+            int rowsInserted = preparedStatement.executeUpdate();
+            if (rowsInserted > 0) {
+                System.out.println("Studentul a fost inserat in baza de date.");
+            }
+            else {
+                System.out.println("Studentul nu a putut fi inserat in baza de date.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                preparedStatement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public String verificareRepartitie(String nrMatricol) {
+        System.out.println("Am intrat in verifica repartitie.");
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        int nrLinii = 0;
+        try {
+            preparedStatement = connection.prepareStatement("SELECT count(*) FROM studenti1 WHERE nr_matricol = ?");
+            preparedStatement.setString(1, nrMatricol);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                nrLinii = resultSet.getInt("count(*)");
+                if(nrLinii < 1) {
+                    return "Studentul nu exista in baza de date.";
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                preparedStatement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println("am gasit " + nrLinii + " de studenti cu acest nr matricol.");
+
+        preparedStatement = null;
+        resultSet = null;
+        try {
+            preparedStatement = connection.prepareStatement("SELECT camin_repartizat FROM studenti1 WHERE nr_matricol = ?");
+            preparedStatement.setString(1, nrMatricol);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                String rezultatRepartitie = resultSet.getString("camin_repartizat");
+                System.out.println("Studentul a fost repartizat la caminul " + rezultatRepartitie + ".");
+                return rezultatRepartitie;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                preparedStatement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
 }
