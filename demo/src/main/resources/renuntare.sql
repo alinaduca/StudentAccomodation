@@ -16,9 +16,9 @@ BEGIN
 
   -- Pentru fiecare student, gener?m un numar random între 0 ?i 1
   FOR i IN 1..studenti_tab.COUNT LOOP
-    ok := ROUND(DBMS_RANDOM.VALUE(0, 1));
-    -- Daca ok este 1, actualizam camin_repartizat cu null pentru studentul respectiv
-    IF ok = 1 THEN
+    ok := ROUND(DBMS_RANDOM.VALUE(0, 2));
+    -- Daca ok este 0, actualizam camin_repartizat cu null pentru studentul respectiv, studentul a renuntat la camin
+    IF ok = 0 THEN
       BEGIN
           SELECT camin_repartizat INTO camin_student FROM studenti1 WHERE id = studenti_tab(i);
           SELECT gen, facultate, id INTO gen_student, facultate_student, id_student FROM studenti1 WHERE id = studenti_tab(i);
@@ -39,6 +39,13 @@ BEGIN
         WHEN OTHERS THEN
           DBMS_OUTPUT.PUT_LINE('A aparut o eroare pentru studentul cu id-ul ' || studenti_tab(i));
       END;
+    --studentul a confirmat locul
+    ELSIF ok=1 THEN
+        SELECT id INTO id_student FROM studenti1 WHERE id = studenti_tab(i);
+        UPDATE studenti1 SET confirmat_camin = 1 WHERE id = id_student;
+    ELSIF ok=2 THEN
+        SELECT id INTO id_student FROM studenti1 WHERE id = studenti_tab(i);
+        UPDATE studenti1 SET camin_repartizat = null WHERE id = id_student;
     END IF;
   END LOOP;
 END;
