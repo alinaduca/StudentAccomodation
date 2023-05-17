@@ -67,6 +67,7 @@ public class ClientThread extends Thread {
                             if(inputLine.equals("repartizeaza")) {
                                 accomodation.RepartizareStudentiInCamin(); //Repartizare2StudentiInCamin dupa reinscrieri
                                 out.println("ok");
+                                System.out.println("s-a realizat repartizarea");
                             }
                             else {
                                 if(inputLine.equals("repartizeaza2")) {
@@ -83,6 +84,37 @@ public class ClientThread extends Thread {
                                         }
                                         System.out.println(mesaj);
                                         out.println(mesaj);
+                                    }
+                                    else if(parts[0].equals("insert-student")) {
+                                        String lastName = parts[1];
+                                        String firstName = parts[2];
+                                        String nrMatricol = parts[3];
+                                        String email = parts[4];
+                                        String telefon = parts[5];
+                                        String facultate = parts[6];
+                                        String med = parts[7];
+                                        double medie = Double.parseDouble(med);
+                                        String camin1 = parts[8];
+                                        String camin2 = parts[9];
+                                        String camin3 = parts[10];
+                                        String camin4 = parts[11];
+                                        String camin5 = parts[12];
+                                        String gen = parts[13];
+                                        System.out.println("lastName:" + lastName);
+                                        System.out.println("firstName:" + firstName);
+                                        System.out.println("nrMatricol:" + nrMatricol);
+                                        System.out.println("email:" + email);
+                                        System.out.println("telefon:" + telefon);
+                                        System.out.println("facultate:" + facultate);
+                                        System.out.println("medie:" + medie);
+                                        System.out.println("camin1:" + camin1);
+                                        System.out.println("camin2:" + camin2);
+                                        System.out.println("camin3:" + camin3);
+                                        System.out.println("camin4:" + camin4);
+                                        System.out.println("camin5:" + camin5);
+                                        System.out.println("gen:" + gen);
+//                                        inserareStudent();
+
                                     }
                                 }
                             }

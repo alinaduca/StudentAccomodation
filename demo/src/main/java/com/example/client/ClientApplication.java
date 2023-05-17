@@ -46,7 +46,6 @@ public class ClientApplication extends Application {
     private String camin4;
     private String camin5;
     private List<String> preferinteCamine;
-    private static int accesari = 0;
 
     public void init() {
         try {
@@ -54,7 +53,6 @@ public class ClientApplication extends Application {
             socket = new Socket(host.getHostName(), port);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
-            out.println("get-facultati");
             System.out.println("Connected to server at " + host + ":" + port);
         } catch(IOException ignored) { }
     }
@@ -97,7 +95,7 @@ public class ClientApplication extends Application {
         if(firstName == null || firstName.length() < 2) {
             return 2;
         }
-        if(nrMatricol == null || nrMatricol.length() < 2) {
+        if(nrMatricol == null || nrMatricol.length() != 12) {
             return 3;
         }
         if(email == null || email.length() < 2 || !email.contains("@") || !email.contains(".")) {
@@ -110,7 +108,6 @@ public class ClientApplication extends Application {
             char c = telefon.charAt(i);
             String s = c + "";
             if(!"0123456789".contains(s)) {
-//                System.out.println(s + ",");
                 return 5;
             }
         }
@@ -130,6 +127,21 @@ public class ClientApplication extends Application {
     }
 
     private void firstPage(Stage stage) {
+        out.println("get-facultati");
+        String inputLine = null;
+        try {
+            inputLine = in.readLine();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        String[] parts = inputLine.split(";");
+        List<String> list = new ArrayList<>();
+        for(String fac : parts) {
+            if(fac.contains("Facultatea")) {
+                list.add(fac);
+            }
+        }
+
         BorderPane root = new BorderPane();
         Button register = new Button("Înregistrare student");
         register.setFont(Font.font(20));
@@ -138,20 +150,31 @@ public class ClientApplication extends Application {
         Button admin = new Button("Conectare administrator");
         admin.setFont(Font.font(20));
 
+        Label mesajAllert = new Label();
+        HBox allert = new HBox(mesajAllert);
+        allert.setAlignment(Pos.CENTER);
+        allert.setPadding(new Insets(0, 0, 20, 0));
         VBox menu = new VBox(register, check, admin);
         menu.setAlignment(Pos.CENTER);
         menu.setSpacing(70);
         root.setCenter(menu);
+        root.setBottom(allert);
         stage.setScene(new Scene(root, 700, 600));
         stage.show();
 
         register.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                try {
-                    draw(stage);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                if(!repartizareTurul1) {
+                    try {
+                        draw(stage, list);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                else {
+                    mesajAllert.setText("S-a încheiat perioada de înscriere.");
+                    mesajAllert.setTextFill(Color.RED);
                 }
             }
         });
@@ -159,6 +182,7 @@ public class ClientApplication extends Application {
         check.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                mesajAllert.setText("");
                 checkRepartition(stage);
             }
         });
@@ -166,6 +190,7 @@ public class ClientApplication extends Application {
         admin.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                mesajAllert.setText("");
                 loginAdmin(stage);
             }
         });
@@ -187,11 +212,24 @@ public class ClientApplication extends Application {
         Label nrMatricolLabel = new Label("Introduceți numărul matricol: ");
         TextField nrMatricolTextField = new TextField();
         Button verificaButton = new Button("Verifică");
+        Label mesajNumarMatricol = new Label();
         verificaButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 String nrMat = nrMatricolTextField.getText();
-
+                if(nrMat == null || nrMat.length() < 1) {
+                    mesajNumarMatricol.setText("Nu ai introdus numărul matricol.");
+                    mesajNumarMatricol.setTextFill(Color.RED);
+                }
+                else if(nrMat.length() != 12) {
+                    mesajNumarMatricol.setText("Numărul matricol nu este valid.");
+                    mesajNumarMatricol.setTextFill(Color.RED);
+                }
+                else {
+                    //Aici ii trimit serverului mesajul ca s-a citit un nr matricol
+                    //Mesajul ar fi sub forma "student;<nr-matricol>"
+                    //Aici mi se va returna un mesaj, anume daca studentul a intrat sau nu la un camin selectat.
+                }
             }
         });
         HBox verifica = new HBox(verificaButton);
@@ -199,8 +237,12 @@ public class ClientApplication extends Application {
         HBox nrMatPanel = new HBox(nrMatricolLabel, nrMatricolTextField);
         nrMatPanel.setAlignment(Pos.CENTER);
 
-        VBox mainPanel = new VBox(nrMatPanel, verifica);
-//        mainPanel.setAlignment(Pos.CENTER);
+        VBox message = new VBox(mesajNumarMatricol);
+        VBox mainPanel = new VBox(nrMatPanel, verifica, message);
+        message.setAlignment(Pos.CENTER);
+        Label feedbackRepartizare = new Label("Nu ai fost repartizat.");
+        VBox newVbox = new VBox(feedbackRepartizare);
+        newVbox.setAlignment(Pos.CENTER);
         mainPanel.setSpacing(20);
         HBox backPanel = new HBox(backButton);
         root.setTop(backPanel);
@@ -230,6 +272,13 @@ public class ClientApplication extends Application {
             @Override
             public void handle(ActionEvent event) {
                 if(!repartizareTurul1) {
+                    out.println("repartizeaza");
+                    String inputLine = null;
+                    try {
+                        inputLine = in.readLine();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                     mesajLabel.setText("Repartizarea a fost realizată cu succes.");
                     mesajLabel.setTextFill(Color.GREEN);
                     repartizareTurul1 = true;
@@ -297,15 +346,6 @@ public class ClientApplication extends Application {
                         throw new RuntimeException(e);
                     }
                     String[] parts = inputLine.split(";");
-                    int i = 0;
-                    if(accesari == 0) {
-                        try {
-                            inputLine = in.readLine();
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                        accesari = 1;
-                    }
                     list1.clear();
                     for(String fac : parts) {
                         if(fac.contains("Facultatea")) {
@@ -337,15 +377,6 @@ public class ClientApplication extends Application {
                     }
                     System.out.println(inputLine);
                     String[] parts = inputLine.split(";");
-                    int i = 0;
-                    if(accesari == 0) {
-                        try {
-                            inputLine = in.readLine();
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                        accesari = 1;
-                    }
                     list1.clear();
                     for(String camin : parts) {
                         if(camin.contains("C") || camin.contains("Aka") || camin.contains("Gau")) {
@@ -465,7 +496,7 @@ public class ClientApplication extends Application {
         stage.show();
     }
 
-    private void draw(Stage stage) throws IOException {
+    private void draw(Stage stage, List<String> list) throws IOException {
         firstName = null;
         lastName = null;
         nrMatricol = null;
@@ -523,22 +554,6 @@ public class ClientApplication extends Application {
         HBox telefonPanel = new HBox(telefonLabel, telefonTextField);
 
         Label facultateLabel = new Label("Facultate: ");
-
-        out.println("get-facultati");
-        String inputLine = in.readLine();
-        String[] parts = inputLine.split(";");
-        int i = 0;
-        if(accesari == 0) {
-            inputLine = in.readLine();
-            accesari = 1;
-        }
-        List<String> list = new ArrayList<>();
-        for(String fac : parts) {
-            if(fac.contains("Facultatea")) {
-                list.add(fac);
-            }
-        }
-
         ObservableList<String> options = FXCollections.observableArrayList(list);
         ComboBox facultateComboBox = new ComboBox(options);
         facultateComboBox.setPrefWidth(textFieldWidth);
@@ -777,8 +792,10 @@ public class ClientApplication extends Application {
                 if(camin5 != null && !preferinteCamine.contains(camin5)) {
                     preferinteCamine.add(camin5);
                 }
+                String med = "0";
                 try {
-                    medie = Double.parseDouble(medieTextField.getText());
+                    med = medieTextField.getText();
+                    medie = Double.parseDouble(med);
                 } catch(NumberFormatException e) {
                     mesaj = "Introduceți o medie validă.";
                 }
@@ -786,6 +803,9 @@ public class ClientApplication extends Application {
                     switch(valid(lastName, firstName, nrMatricol, email, telefon, facultate, medie, preferinteCamine, gen)) {
                         case 0: mesaj = null;
 //                                Student s = new Student(lastName, firstName, nrMatricol, email, telefon, facultate, medie, preferinteCamine, gen);
+                                String studentNou = "insert-student:" + lastName + ":" + firstName + ":" + nrMatricol + ":" + email + ":" + telefon + ":"
+                                        + facultate + ":" + med +  ":" + camin1 + ":" + camin2 + ":" + camin3 + ":" + camin4 + ":" + camin5 + ":" + gen;
+                                out.println(studentNou);
                                 firstPage(stage);
                                 break;
                         case 1: mesaj = "Introduceți numele."; break;
