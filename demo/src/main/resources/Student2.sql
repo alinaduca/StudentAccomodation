@@ -1,61 +1,70 @@
+DROP TABLE camine;
 drop table studenti1;
 drop table facultate_camine;
 
 DELETE FROM studenti1;
 DELETE FROM facultate_camine;
 
---CREATE TABLE studenti1 (
---  id INT NOT NULL PRIMARY KEY,
---  nume VARCHAR2(15),
---  prenume VARCHAR2(30),
---  gen VARCHAR2(10),
---  nr_matricol VARCHAR2(20),
---  email VARCHAR2(40),
---  telefon VARCHAR(15),
---  facultate VARCHAR2(50),
---  medie NUMBER(4,2),
---  preferinta1 VARCHAR2(30),
---  preferinta2 VARCHAR2(30),
---  preferinta3 VARCHAR2(30),
---  preferinta4 VARCHAR2(30),
---  preferinta5 VARCHAR2(30),
---  camin_repartizat VARCHAR2(30),
---  reinscris_la_camin INTEGER
---)
---
---CREATE TABLE camine (
---  id INT NOT NULL PRIMARY KEY,
---  nume VARCHAR2(15),
---  capacitate_per_camera INTEGER,
---  pret INTEGER,
---  nr_camere_fete INTEGER,
---  nr_camere_baieti INTEGER
---)
+
+CREATE TABLE studenti1 (
+  id INT NOT NULL PRIMARY KEY,
+  nume VARCHAR2(15),
+  prenume VARCHAR2(30),
+  gen VARCHAR2(10),
+  nr_matricol VARCHAR2(20),
+  email VARCHAR2(40),
+  telefon VARCHAR(15),
+  facultate VARCHAR2(50),
+  medie NUMBER(4,2),
+  preferinta1 VARCHAR2(30),
+  preferinta2 VARCHAR2(30),
+  preferinta3 VARCHAR2(30),
+  preferinta4 VARCHAR2(30),
+  preferinta5 VARCHAR2(30),
+  camin_repartizat VARCHAR2(30)
+)
+
+CREATE OR REPLACE TYPE adresa AS OBJECT
+(strada varchar2(20),
+ nr varchar2(10)
+);
+/
+
+CREATE TABLE camine (
+  id INT NOT NULL PRIMARY KEY,
+  nume VARCHAR2(15),
+  capacitate_per_camera INTEGER,
+  pret INTEGER, 
+  adresa_camin adresa
+)
 
 
---CREATE TABLE facultate_camine (
---  id INT NOT NULL PRIMARY KEY,
---  nume_facultate VARCHAR2(50),
---  id_camin INTEGER,
---  locuri_fete INTEGER,
---  locuri_baieti INTEGER
---)
+CREATE TABLE facultate_camine (
+  id INT NOT NULL PRIMARY KEY,
+  nume_facultate VARCHAR2(50),
+  id_camin INTEGER,
+  locuri_fete INTEGER,
+  locuri_baieti INTEGER
+)
+
 
 
 --inseram camine
-INSERT INTO camine (id, nume, capacitate_per_camera, pret, nr_camere_fete, nr_camere_baieti) VALUES (1, 'Akademos', 2, 650, 30, 20);
-INSERT INTO camine (id, nume, capacitate_per_camera, pret, nr_camere_fete, nr_camere_baieti) VALUES (2, 'Gaudeamus', 2, 600, 35, 25);
-INSERT INTO camine (id, nume, capacitate_per_camera, pret, nr_camere_fete, nr_camere_baieti) VALUES (3, 'C1', 3, 125, 30, 20);
-INSERT INTO camine (id, nume, capacitate_per_camera, pret, nr_camere_fete, nr_camere_baieti) VALUES (4, 'C2', 3, 125, 30, 20);
-INSERT INTO camine (id, nume, capacitate_per_camera, pret, nr_camere_fete, nr_camere_baieti) VALUES (5, 'C3', 3, 125, 30, 20);
-INSERT INTO camine (id, nume, capacitate_per_camera, pret, nr_camere_fete, nr_camere_baieti) VALUES (6, 'C4', 3, 125, 30, 20);
-INSERT INTO camine (id, nume, capacitate_per_camera, pret, nr_camere_fete, nr_camere_baieti) VALUES (7, 'C5', 3, 125, 30, 20);
-INSERT INTO camine (id, nume, capacitate_per_camera, pret, nr_camere_fete, nr_camere_baieti) VALUES (8, 'C6', 3, 125, 30, 20);
-INSERT INTO camine (id, nume, capacitate_per_camera, pret, nr_camere_fete, nr_camere_baieti) VALUES (9, 'C7', 3, 125, 30, 20);
-INSERT INTO camine (id, nume, capacitate_per_camera, pret, nr_camere_fete, nr_camere_baieti) VALUES (10, 'C8', 3, 125, 30, 20);
-INSERT INTO camine (id, nume, capacitate_per_camera, pret, nr_camere_fete, nr_camere_baieti) VALUES (11, 'C9', 3, 125, 30, 20);
-INSERT INTO camine (id, nume, capacitate_per_camera, pret, nr_camere_fete, nr_camere_baieti) VALUES (12, 'C10', 3, 125, 30, 20);
-INSERT INTO camine (id, nume, capacitate_per_camera, pret, nr_camere_fete, nr_camere_baieti) VALUES (13, 'C11', 3, 125, 30, 20);
+INSERT INTO camine (id, nume, capacitate_per_camera, pret, adresa_camin) VALUES (1, 'Akademos', 2, 650, adresa('Str. P?curari', 'nr. 6'));
+INSERT INTO camine (id, nume, capacitate_per_camera, pret, adresa_camin) VALUES (2, 'Gaudeamus', 2, 572, adresa('Str. Codrescu', 'Nr.1'));
+INSERT INTO camine (id, nume, capacitate_per_camera, pret, adresa_camin) VALUES (3, 'Buna Vestire', 2, 572, adresa('Str. Iordachi Lozonschi', 'nr. 9'));
+INSERT INTO camine (id, nume, capacitate_per_camera, pret, adresa_camin) VALUES (4, 'C1', 3, 325, adresa('Str. Stoicescu', 'nr.1'));
+INSERT INTO camine (id, nume, capacitate_per_camera, pret, adresa_camin) VALUES (5, 'C2', 3, 325, adresa('Str. Stoicescu', 'nr.2'));
+INSERT INTO camine (id, nume, capacitate_per_camera, pret, adresa_camin) VALUES (6, 'C3', 3, 325, adresa('Str. Stoicescu', 'nr.3'));
+INSERT INTO camine (id, nume, capacitate_per_camera, pret, adresa_camin) VALUES (7, 'C4', 4, 150, adresa('Str. Stoicescu', 'nr.4'));
+INSERT INTO camine (id, nume, capacitate_per_camera, pret, adresa_camin) VALUES (8, 'C5', 3, 325, adresa('Str. Titu Maiorescu', 'nr.6'));
+INSERT INTO camine (id, nume, capacitate_per_camera, pret, adresa_camin) VALUES (9, 'C6', 4, 150, adresa('Str. Titu Maiorescu', 'nr.7'));
+INSERT INTO camine (id, nume, capacitate_per_camera, pret, adresa_camin) VALUES (10, 'C7', 4, 150, adresa('Str. Titu Maiorescu', 'nr.8'));
+INSERT INTO camine (id, nume, capacitate_per_camera, pret, adresa_camin) VALUES (11, 'C8', 4, 150, adresa('Str. Titu Maiorescu', 'nr.9'));
+INSERT INTO camine (id, nume, capacitate_per_camera, pret, adresa_camin) VALUES (12, 'C9', 3, 221, adresa('Str.Codrescu', 'nr. 10'));
+INSERT INTO camine (id, nume, capacitate_per_camera, pret, adresa_camin) VALUES (13, 'C10', 4, 150, adresa('Str.Codrescu', 'nr. 10'));
+INSERT INTO camine (id, nume, capacitate_per_camera, pret, adresa_camin) VALUES (14, 'C11', 3, 221, adresa('Str.Codrescu', 'nr. 10'));
+INSERT INTO camine (id, nume, capacitate_per_camera, pret, adresa_camin) VALUES (15, 'C12', 4, 150, adresa('Str.Codrescu', 'nr. 10'));
 
 
 
@@ -70,102 +79,105 @@ DECLARE
   ok INTEGER;
 BEGIN
   id1 := 1;
-  FOR i IN 1..13 LOOP
+  FOR i IN 1..15 LOOP
     ok := ROUND(DBMS_RANDOM.VALUE(0, 1));
     IF ok=1 THEN
         INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (id1, 'Facultatea de Biologie', i, ROUND(DBMS_RANDOM.VALUE(1, 10)), ROUND(DBMS_RANDOM.VALUE(1, 10)));
         id1 := id1+1;
     END IF;
   END LOOP;
-  FOR i IN 1..13 LOOP
+  FOR i IN 1..15 LOOP
     ok := ROUND(DBMS_RANDOM.VALUE(0, 1));
     IF ok=1 THEN
       INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (id1, 'Facultatea de Chimie', i, ROUND(DBMS_RANDOM.VALUE(1, 10)), ROUND(DBMS_RANDOM.VALUE(1, 10)));
       id1 := id1+1;
     END IF;
   END LOOP;
-  FOR i IN 1..13 LOOP
+  FOR i IN 1..15 LOOP
     ok := ROUND(DBMS_RANDOM.VALUE(0, 1));
     IF ok=1 THEN
       INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (id1, 'Facultatea de Drept', i, ROUND(DBMS_RANDOM.VALUE(1, 10)), ROUND(DBMS_RANDOM.VALUE(1, 10)));
       id1 := id1+1;
     END IF;
   END LOOP;
-  FOR i IN 1..13 LOOP
+  FOR i IN 1..15 LOOP
   ok := ROUND(DBMS_RANDOM.VALUE(0, 1));
     IF ok=1 THEN
       INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (id1, 'Facultatea de Economie si Administrarea Afacerilor', i, ROUND(DBMS_RANDOM.VALUE(1, 10)), ROUND(DBMS_RANDOM.VALUE(1, 10)));
       id1 := id1+1;
     END IF;
   END LOOP;
-  FOR i IN 1..13 LOOP
+  FOR i IN 1..15 LOOP
     ok := ROUND(DBMS_RANDOM.VALUE(0, 1));
     IF ok=1 THEN
       INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (id1, 'Facultatea de Educatie Fizica si Sport', i, ROUND(DBMS_RANDOM.VALUE(1, 10)), ROUND(DBMS_RANDOM.VALUE(1, 10)));
       id1 := id1+1;
     END IF;
   END LOOP;
-  FOR i IN 1..13 LOOP
-    INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (id1, 'Facultatea de Filosofie si Stiinte Social-Politice', i, ROUND(DBMS_RANDOM.VALUE(1, 10)), ROUND(DBMS_RANDOM.VALUE(1, 10)));
-    id1 := id1+1;
+  FOR i IN 1..15 LOOP
+    ok := ROUND(DBMS_RANDOM.VALUE(0, 1));
+    IF ok=1 THEN
+      INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (id1, 'Facultatea de Filosofie si Stiinte Social-Politice', i, ROUND(DBMS_RANDOM.VALUE(1, 10)), ROUND(DBMS_RANDOM.VALUE(1, 10)));
+      id1 := id1+1;
+    END IF;
   END LOOP;
-  FOR i IN 1..13 LOOP
+  FOR i IN 1..15 LOOP
     ok := ROUND(DBMS_RANDOM.VALUE(0, 1));
     IF ok=1 THEN
       INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (id1, 'Facultatea de Fizica', i, ROUND(DBMS_RANDOM.VALUE(1, 10)), ROUND(DBMS_RANDOM.VALUE(1, 10)));
       id1 := id1+1;
     END IF;
   END LOOP;
-  FOR i IN 1..13 LOOP
+  FOR i IN 1..15 LOOP
     ok := ROUND(DBMS_RANDOM.VALUE(0, 1));
     IF ok=1 THEN
       INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (id1, 'Facultatea de Geografie si Geologie', i, ROUND(DBMS_RANDOM.VALUE(1, 10)), ROUND(DBMS_RANDOM.VALUE(1, 10)));
       id1 := id1+1;
     END IF;
   END LOOP;
-  FOR i IN 1..13 LOOP
+  FOR i IN 1..15 LOOP
     ok := ROUND(DBMS_RANDOM.VALUE(0, 1));
     IF ok=1 THEN
       INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (id1, 'Facultatea de Informatica', i, ROUND(DBMS_RANDOM.VALUE(1, 10)), ROUND(DBMS_RANDOM.VALUE(1, 10)));
       id1 := id1+1;
     END IF;
   END LOOP;
-  FOR i IN 1..13 LOOP
+  FOR i IN 1..15 LOOP
     ok := ROUND(DBMS_RANDOM.VALUE(0, 1));
     IF ok=1 THEN
       INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (id1, 'Facultatea de Istorie', i, ROUND(DBMS_RANDOM.VALUE(1, 10)), ROUND(DBMS_RANDOM.VALUE(1, 10)));
       id1 := id1+1;
     END IF;
   END LOOP;
-  FOR i IN 1..13 LOOP
+  FOR i IN 1..15 LOOP
     ok := ROUND(DBMS_RANDOM.VALUE(0, 1));
     IF ok=1 THEN
       INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (id1, 'Facultatea de Litere', i, ROUND(DBMS_RANDOM.VALUE(1, 10)), ROUND(DBMS_RANDOM.VALUE(1, 10)));
       id1 := id1+1;
     END IF;
   END LOOP;
-  FOR i IN 1..13 LOOP
+  FOR i IN 1..15 LOOP
     ok := ROUND(DBMS_RANDOM.VALUE(0, 1));
     IF ok=1 THEN
       INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (id1, 'Facultatea de Matematica', i, ROUND(DBMS_RANDOM.VALUE(1, 10)), ROUND(DBMS_RANDOM.VALUE(1, 10)));
       id1 := id1+1;
     END IF;
   END LOOP;
-  FOR i IN 1..13 LOOP
+  FOR i IN 1..15 LOOP
     ok := ROUND(DBMS_RANDOM.VALUE(0, 1));
     IF ok=1 THEN
       INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (id1, 'Facultatea de Psihologie si Stiinte ale Educatiei', i, ROUND(DBMS_RANDOM.VALUE(1, 10)), ROUND(DBMS_RANDOM.VALUE(1, 10)));
       id1 := id1+1;
     END IF;
   END LOOP;
-  FOR i IN 1..13 LOOP
+  FOR i IN 1..15 LOOP
     ok := ROUND(DBMS_RANDOM.VALUE(0, 1));
     IF ok=1 THEN
       INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (id1, 'Facultatea de Teologie Ortodoxa', i, ROUND(DBMS_RANDOM.VALUE(1, 10)), ROUND(DBMS_RANDOM.VALUE(1, 10)));
       id1 := id1+1;
     END IF;
   END LOOP;
-  FOR i IN 1..13 LOOP
+  FOR i IN 1..15 LOOP
     ok := ROUND(DBMS_RANDOM.VALUE(0, 1));
     IF ok=1 THEN
       INSERT INTO facultate_camine (id, nume_facultate, id_camin, locuri_fete, locuri_baieti)VALUES (id1, 'Facultatea de Teologie Romano-Catolica', i, ROUND(DBMS_RANDOM.VALUE(1, 10)), ROUND(DBMS_RANDOM.VALUE(1, 10)));
@@ -173,8 +185,14 @@ BEGIN
     END IF;
   END LOOP;
   DBMS_OUTPUT.PUT_LINE('Inserted rows.');
+  EXCEPTION
+  WHEN DUP_VAL_ON_INDEX THEN
+    DBMS_OUTPUT.PUT_LINE('Error: Duplicate value!');
+  WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM);
+    -- Sau folose?te DBMS_OUTPUT.PUT_LINE('Error: ' || DBMS_UTILITY.FORMAT_ERROR_STACK);
 END;
-
+/
 
 
 
@@ -216,7 +234,7 @@ BEGIN
     END IF;
     nr_matricol_student := '1234567' || TO_CHAR(i, 'FM00000');
     email_student := 'student' || i || '@example.com';
-    telefon_student := '07' || TO_CHAR(100000 + i, 'FM000000');
+    telefon_student := '07' || TO_CHAR(i, 'FM00000000');
     medie_student := TRUNC(DBMS_RANDOM.VALUE(5, 10) * 100) / 100;
     facultate_student := CASE MOD(ROUND(DBMS_RANDOM.VALUE(1, 15)), 15)
       WHEN 0 THEN 'Facultatea de Biologie'
@@ -239,11 +257,15 @@ BEGIN
     OPEN c(facultate_student);
   nr := 1;
     LOOP
+      BEGIN
         v_camine_pe_facultate.extend;
         FETCH c INTO v_camine_pe_facultate(nr);
         EXIT WHEN c%NOTFOUND;
         DBMS_OUTPUT.PUT_LINE(v_camine_pe_facultate(nr));
         nr := nr + 1;
+        EXCEPTION WHEN NO_DATA_FOUND THEN
+          EXIT; -- Exit the loop if no more data is found
+      END;
   END LOOP;
   CLOSE c;
   nr := nr - 1;
@@ -319,6 +341,7 @@ IS
   TYPE studenti_tab_type IS TABLE OF Studenti1.id%TYPE;
   studenti_tab studenti_tab_type := studenti_tab_type();
   ok INTEGER;
+  id_student Studenti1.id%TYPE;
   gen_student studenti1.gen%type;
   facultate_student studenti1.facultate%type;
   camin_student studenti1.camin_repartizat%type;
@@ -332,17 +355,26 @@ BEGIN
     ok := ROUND(DBMS_RANDOM.VALUE(0, 1));
     -- Daca ok este 1, actualizam camin_repartizat cu null pentru studentul respectiv
     IF ok = 1 THEN
-      SELECT camin_repartizat INTO camin_student FROM studenti1 WHERE id = studenti_tab(i);
-      UPDATE studenti1 SET camin_repartizat = null WHERE id = studenti_tab(i);
-      SELECT gen, facultate INTO gen_student, facultate_student FROM studenti1 WHERE id = studenti_tab(i);
-      SELECT id INTO id_camin_student FROM camine WHERE nume = camin_student;
-      IF gen_student LIKE 'fata' THEN
-        UPDATE facultate_camine SET locuri_fete = locuri_fete + 1 WHERE nume_facultate = facultate_student AND id_camin = id_camin_student;
-        DBMS_OUTPUT.PUT_LINE('Fata cu id-ul ' || studenti_tab(i) || ' a renuntat la camin');
-      ELSIF gen_student LIKE 'baiat' THEN
-        UPDATE facultate_camine SET locuri_baieti = locuri_baieti + 1 WHERE nume_facultate = facultate_student AND id_camin = id_camin_student;
-        DBMS_OUTPUT.PUT_LINE('Baiatul cu id-ul ' || studenti_tab(i) || ' a renuntat la camin');
-      END IF;
+      BEGIN
+          SELECT camin_repartizat INTO camin_student FROM studenti1 WHERE id = studenti_tab(i);
+          SELECT gen, facultate, id INTO gen_student, facultate_student, id_student FROM studenti1 WHERE id = studenti_tab(i);
+          DELETE FROM studenti1 WHERE id = id_student;
+          SELECT id INTO id_camin_student FROM camine WHERE nume = camin_student;
+          IF gen_student LIKE 'fata' THEN
+            UPDATE facultate_camine SET locuri_fete = locuri_fete + 1 WHERE nume_facultate = facultate_student AND id_camin = id_camin_student;
+            DBMS_OUTPUT.PUT_LINE('Fata cu id-ul ' || studenti_tab(i) || ' a renuntat la camin');
+          ELSIF gen_student LIKE 'baiat' THEN
+            UPDATE facultate_camine SET locuri_baieti = locuri_baieti + 1 WHERE nume_facultate = facultate_student AND id_camin = id_camin_student;
+            DBMS_OUTPUT.PUT_LINE('Baiatul cu id-ul ' || studenti_tab(i) || ' a renuntat la camin');
+          END IF;
+          EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+          DBMS_OUTPUT.PUT_LINE('Nu s-a gasit inregistrare pentru studentul cu id-ul ' || studenti_tab(i));
+        WHEN TOO_MANY_ROWS THEN
+          DBMS_OUTPUT.PUT_LINE('S-au gasit prea multe inregistrari pentru studentul cu id-ul ' || studenti_tab(i));
+        WHEN OTHERS THEN
+          DBMS_OUTPUT.PUT_LINE('A aparut o eroare pentru studentul cu id-ul ' || studenti_tab(i));
+      END;
     END IF;
   END LOOP;
 END;
@@ -352,58 +384,14 @@ BEGIN
   modificare_camin_repartizat();
 END;
 
+commit;
+
 --verificare
 SELECT * FROM facultate_camine;
 SELECT * FROM studenti1 where camin_repartizat IS NOT NULL;
 
-commit;
-
---reinscrieri la camine
-CREATE OR REPLACE PROCEDURE reinscriere_studenti
-IS
-  TYPE studenti_tab_type IS TABLE OF studenti1.id%TYPE;
-  studenti_tab studenti_tab_type := studenti_tab_type();
-  ok INTEGER;
-  gen_student studenti1.gen%type;
-  facultate_student studenti1.facultate%type;
-  camin_student studenti1.camin_repartizat%type;
-  id_camin_student camine.id%type;
-BEGIN
-  -- Selectam studentii care au fost repartizati la un camin
-  SELECT id BULK COLLECT INTO studenti_tab FROM studenti1 WHERE camin_repartizat IS NULL;
-
-  -- Pentru fiecare student, gener?m un numar random între 0 ?i 1
-  FOR i IN 1..studenti_tab.COUNT LOOP
-    ok := ROUND(DBMS_RANDOM.VALUE(0, 1));
-    -- Daca ok este 1, il reinscriem in turul 2
-    IF ok = 1 THEN
-      UPDATE studenti1 SET reinscris_la_camin = 1 WHERE id = studenti_tab(i);
-    ELSE 
-      UPDATE studenti1 SET reinscris_la_camin = 0 WHERE id = studenti_tab(i);
-    END IF;
-  END LOOP;
-END;
-/
-SET SERVEROUTPUT ON;
-BEGIN
-  reinscriere_studenti();
-END;
 
 
-commit;
-
---verificare
-select * from studenti1;
-select * from facultate_camine;
-select * from studenti1 where camin_repartizat is not null;
- 
-
-
-
-
-
-
-commit;
 --select * from facultate_camine where nume_facultate='Facultatea de Chimie';
 --select * from studenti1 where camin_repartizat is not null;
 delete from facultate_camine;
