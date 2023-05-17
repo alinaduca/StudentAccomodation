@@ -1,9 +1,9 @@
 DROP TABLE camine;
+/
 drop table studenti1;
+/
 drop table facultate_camine;
-
-DELETE FROM studenti1;
-DELETE FROM facultate_camine;
+/
 
 
 CREATE TABLE studenti1 (
@@ -23,6 +23,7 @@ CREATE TABLE studenti1 (
   preferinta5 VARCHAR2(30),
   camin_repartizat VARCHAR2(30)
 )
+/
 
 CREATE OR REPLACE TYPE adresa AS OBJECT
 (strada varchar2(20),
@@ -37,7 +38,7 @@ CREATE TABLE camine (
   pret INTEGER, 
   adresa_camin adresa
 )
-
+/
 
 CREATE TABLE facultate_camine (
   id INT NOT NULL PRIMARY KEY,
@@ -46,7 +47,7 @@ CREATE TABLE facultate_camine (
   locuri_fete INTEGER,
   locuri_baieti INTEGER
 )
-
+/
 
 
 --inseram camine
@@ -61,12 +62,13 @@ INSERT INTO camine (id, nume, capacitate_per_camera, pret, adresa_camin) VALUES 
 INSERT INTO camine (id, nume, capacitate_per_camera, pret, adresa_camin) VALUES (9, 'C6', 4, 150, adresa('Str. Titu Maiorescu', 'nr.7'));
 INSERT INTO camine (id, nume, capacitate_per_camera, pret, adresa_camin) VALUES (10, 'C7', 4, 150, adresa('Str. Titu Maiorescu', 'nr.8'));
 INSERT INTO camine (id, nume, capacitate_per_camera, pret, adresa_camin) VALUES (11, 'C8', 4, 150, adresa('Str. Titu Maiorescu', 'nr.9'));
-INSERT INTO camine (id, nume, capacitate_per_camera, pret, adresa_camin) VALUES (12, 'C9', 3, 221, adresa('Str.Codrescu', 'nr. 10'));
-INSERT INTO camine (id, nume, capacitate_per_camera, pret, adresa_camin) VALUES (13, 'C10', 4, 150, adresa('Str.Codrescu', 'nr. 10'));
-INSERT INTO camine (id, nume, capacitate_per_camera, pret, adresa_camin) VALUES (14, 'C11', 3, 221, adresa('Str.Codrescu', 'nr. 10'));
-INSERT INTO camine (id, nume, capacitate_per_camera, pret, adresa_camin) VALUES (15, 'C12', 4, 150, adresa('Str.Codrescu', 'nr. 10'));
+INSERT INTO camine (id, nume, capacitate_per_camera, pret, adresa_camin) VALUES (12, 'C9', 3, 221, adresa('Str.Codrescu', 'nr.10'));
+INSERT INTO camine (id, nume, capacitate_per_camera, pret, adresa_camin) VALUES (13, 'C10', 4, 150, adresa('Str.Codrescu', 'nr.10'));
+INSERT INTO camine (id, nume, capacitate_per_camera, pret, adresa_camin) VALUES (14, 'C11', 3, 221, adresa('Str.Codrescu', 'nr.10'));
+INSERT INTO camine (id, nume, capacitate_per_camera, pret, adresa_camin) VALUES (15, 'C12', 4, 150, adresa('Str.Codrescu', 'nr.10'));
+/
 
-
+--SELECT id, nume, capacitate_per_camera, pret, c.adresa_camin.strada, c.adresa_camin.nr FROM camine c;
 
 --inseram camine pentru fiecare facultate
 set serveroutput on;
@@ -193,7 +195,6 @@ BEGIN
     -- Sau folose?te DBMS_OUTPUT.PUT_LINE('Error: ' || DBMS_UTILITY.FORMAT_ERROR_STACK);
 END;
 /
-
 
 
 
@@ -326,73 +327,11 @@ BEGIN
     END LOOP;
     DBMS_OUTPUT.PUT_LINE('Inserted rows.');
 END;
-
+/
 
 COMMIT;
-
-
---verificare
-SELECT * FROM studenti1 ;
-SELECT * FROM facultate_camine;
-
---Renunta cativa studenti la camine
-CREATE OR REPLACE PROCEDURE modificare_camin_repartizat
-IS
-  TYPE studenti_tab_type IS TABLE OF Studenti1.id%TYPE;
-  studenti_tab studenti_tab_type := studenti_tab_type();
-  ok INTEGER;
-  id_student Studenti1.id%TYPE;
-  gen_student studenti1.gen%type;
-  facultate_student studenti1.facultate%type;
-  camin_student studenti1.camin_repartizat%type;
-  id_camin_student camine.id%type;
-BEGIN
-  -- Selectam studentii care au fost repartizati la un camin
-  SELECT id BULK COLLECT INTO studenti_tab FROM studenti1 WHERE camin_repartizat IS NOT NULL;
-
-  -- Pentru fiecare student, gener?m un numar random între 0 ?i 1
-  FOR i IN 1..studenti_tab.COUNT LOOP
-    ok := ROUND(DBMS_RANDOM.VALUE(0, 1));
-    -- Daca ok este 1, actualizam camin_repartizat cu null pentru studentul respectiv
-    IF ok = 1 THEN
-      BEGIN
-          SELECT camin_repartizat INTO camin_student FROM studenti1 WHERE id = studenti_tab(i);
-          SELECT gen, facultate, id INTO gen_student, facultate_student, id_student FROM studenti1 WHERE id = studenti_tab(i);
-          DELETE FROM studenti1 WHERE id = id_student;
-          SELECT id INTO id_camin_student FROM camine WHERE nume = camin_student;
-          IF gen_student LIKE 'fata' THEN
-            UPDATE facultate_camine SET locuri_fete = locuri_fete + 1 WHERE nume_facultate = facultate_student AND id_camin = id_camin_student;
-            DBMS_OUTPUT.PUT_LINE('Fata cu id-ul ' || studenti_tab(i) || ' a renuntat la camin');
-          ELSIF gen_student LIKE 'baiat' THEN
-            UPDATE facultate_camine SET locuri_baieti = locuri_baieti + 1 WHERE nume_facultate = facultate_student AND id_camin = id_camin_student;
-            DBMS_OUTPUT.PUT_LINE('Baiatul cu id-ul ' || studenti_tab(i) || ' a renuntat la camin');
-          END IF;
-          EXCEPTION
-        WHEN NO_DATA_FOUND THEN
-          DBMS_OUTPUT.PUT_LINE('Nu s-a gasit inregistrare pentru studentul cu id-ul ' || studenti_tab(i));
-        WHEN TOO_MANY_ROWS THEN
-          DBMS_OUTPUT.PUT_LINE('S-au gasit prea multe inregistrari pentru studentul cu id-ul ' || studenti_tab(i));
-        WHEN OTHERS THEN
-          DBMS_OUTPUT.PUT_LINE('A aparut o eroare pentru studentul cu id-ul ' || studenti_tab(i));
-      END;
-    END IF;
-  END LOOP;
-END;
 /
-SET SERVEROUTPUT ON;
-BEGIN
-  modificare_camin_repartizat();
-END;
-
-commit;
 
 --verificare
-SELECT * FROM facultate_camine;
-SELECT * FROM studenti1 where camin_repartizat IS NOT NULL;
-
-
-
---select * from facultate_camine where nume_facultate='Facultatea de Chimie';
---select * from studenti1 where camin_repartizat is not null;
-delete from facultate_camine;
-delete from studenti1;
+--SELECT * FROM studenti1 ;
+--SELECT * FROM facultate_camine;
