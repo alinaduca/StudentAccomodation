@@ -20,7 +20,8 @@ CREATE TABLE studenti1 (
   preferinta3 VARCHAR2(30),
   preferinta4 VARCHAR2(30),
   preferinta5 VARCHAR2(30),
-  camin_repartizat VARCHAR2(30)
+  camin_repartizat VARCHAR2(30),
+  confirmat_camin INTEGER
 )
 /
 

@@ -228,7 +228,7 @@ public class Accomodation {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
-            preparedStatement = connection.prepareStatement("SELECT * FROM studenti1 WHERE facultate = ? AND camin_repartizat IS NULL ORDER BY medie DESC");
+            preparedStatement = connection.prepareStatement("SELECT * FROM studenti1 WHERE facultate = ? AND camin_repartizat IS NULL AND confirmat_camin IS NULL ORDER BY medie DESC");
             preparedStatement.setString(1, facultate);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
