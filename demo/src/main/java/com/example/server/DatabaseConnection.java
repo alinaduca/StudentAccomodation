@@ -7,10 +7,10 @@ import java.sql.SQLException;
 public class DatabaseConnection
 {
     private static final String DB_URL = "jdbc:oracle:thin:@localhost:1521:xe";
-//    private static final String USERNAME = "student";
-//    private static final String PASSWORD = "STUDENT";
-    private static final String USERNAME = "system";
-    private static final String PASSWORD = "1234";
+    private static final String USERNAME = "student";
+    private static final String PASSWORD = "STUDENT";
+//    private static final String USERNAME = "system";
+//    private static final String PASSWORD = "1234";
 
     private static DatabaseConnection instance;
     private Connection connection;
