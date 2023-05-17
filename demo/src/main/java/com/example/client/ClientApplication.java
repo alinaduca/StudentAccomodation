@@ -201,7 +201,6 @@ public class ClientApplication extends Application {
 
     private void checkRepartition(Stage stage) {
         boolean repartizat = false;
-//        boolean
         BorderPane root = new BorderPane();
         Button backButton = new Button("Back");
         backButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -211,9 +210,42 @@ public class ClientApplication extends Application {
             }
         });
         Label nrMatricolLabel = new Label("Introduceți numărul matricol: ");
+        Button confirmaLoc = new Button("Confirmă loc");
+        Button renuntare = new Button("Renunță");
+        Button turul2 = new Button("Înscriere turul 2");
+        Button turul2_2 = new Button("Înscriere turul 2");
+        Button detaliiCamin = new Button("Informații despre cămin");
+        Label mesajTur2Label = new Label();
+
+        HBox turul2Panel = new HBox(turul2);
+        turul2Panel.setAlignment(Pos.CENTER);
+        HBox bottomPanel = new HBox(detaliiCamin);
+        bottomPanel.setPadding(new Insets(0, 0, 40, 0));
+        bottomPanel.setAlignment(Pos.CENTER);
+
+        HBox confirmarePanel = new HBox(confirmaLoc, renuntare, turul2_2);
+        confirmarePanel.setAlignment(Pos.CENTER);
         TextField nrMatricolTextField = new TextField();
         Button verificaButton = new Button("Verifică");
         Label mesajNumarMatricol = new Label();
+
+        HBox verifica = new HBox(verificaButton);
+        verifica.setAlignment(Pos.CENTER);
+        HBox nrMatPanel = new HBox(nrMatricolLabel, nrMatricolTextField);
+        nrMatPanel.setAlignment(Pos.CENTER);
+
+        VBox message = new VBox(mesajNumarMatricol);
+        VBox mainPanel = new VBox(nrMatPanel, verifica, message);
+        message.setAlignment(Pos.CENTER);
+        mainPanel.setPadding(new Insets(20, 0, 0, 0));
+        Label feedbackRepartizare = new Label("Nu ai fost repartizat.");
+        VBox newVbox = new VBox(feedbackRepartizare, turul2, mesajTur2Label);
+        newVbox.setSpacing(10);
+        newVbox.setAlignment(Pos.CENTER);
+        mainPanel.setSpacing(20);
+        HBox backPanel = new HBox(backButton);
+        stage.setTitle("StudentAccomodation");
+        stage.setScene(new Scene(root, 700, 500));
         verificaButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -237,29 +269,31 @@ public class ClientApplication extends Application {
                         throw new RuntimeException(e);
                     }
                     if(inputLine == null || inputLine.equals("null")) {
-                        mesajNumarMatricol.setText("Nu ai fost repartizat.");
-
+                        mainPanel.getChildren().add(newVbox);
+                    }
+                    else if(inputLine.equals("Studentul nu exista in baza de date.")) {
+                        mesajNumarMatricol.setTextFill(Color.RED);
+                        mesajNumarMatricol.setText(inputLine);
+                    }
+                    else {
+                        mesajNumarMatricol.setText("Ai fost repartizat la căminul " + inputLine + ".");
+                        mainPanel.getChildren().add(confirmarePanel);
+                        confirmarePanel.setSpacing(10);
+                        confirmarePanel.setPadding(new Insets(0, 0, 100, 0));
+                        root.setBottom(bottomPanel);
                     }
                 }
             }
         });
-        HBox verifica = new HBox(verificaButton);
-        verifica.setAlignment(Pos.CENTER);
-        HBox nrMatPanel = new HBox(nrMatricolLabel, nrMatricolTextField);
-        nrMatPanel.setAlignment(Pos.CENTER);
 
-        VBox message = new VBox(mesajNumarMatricol);
-        VBox mainPanel = new VBox(nrMatPanel, verifica, message);
-        message.setAlignment(Pos.CENTER);
-        Label feedbackRepartizare = new Label("Nu ai fost repartizat.");
-        VBox newVbox = new VBox(feedbackRepartizare);
-        newVbox.setAlignment(Pos.CENTER);
-        mainPanel.setSpacing(20);
-        HBox backPanel = new HBox(backButton);
+        turul2_2.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                mesajTur2Label.setText("Te-ai înscris cu succes în turul 2.");
+            }
+        });
         root.setTop(backPanel);
         root.setCenter(mainPanel);
-        stage.setTitle("StudentAccomodation");
-        stage.setScene(new Scene(root, 700, 600));
         stage.show();
     }
 
@@ -321,6 +355,13 @@ public class ClientApplication extends Application {
                         repartizareTurul2 = true;
                     }
                     else {
+                        out.println("repartizeaza");
+                        String inputLine = null;
+                        try {
+                            inputLine = in.readLine();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
                         mesajLabel.setText("Repartizările au fost efectuate.");
                         mesajLabel.setTextFill(Color.RED);
                     }
@@ -813,7 +854,6 @@ public class ClientApplication extends Application {
                 if(mesaj == null) {
                     switch(valid(lastName, firstName, nrMatricol, email, telefon, facultate, medie, preferinteCamine, gen)) {
                         case 0: mesaj = null;
-//                                Student s = new Student(lastName, firstName, nrMatricol, email, telefon, facultate, medie, preferinteCamine, gen);
                                 String studentNou = "insert-student:" + lastName + ":" + firstName + ":" + nrMatricol + ":" + email + ":" + telefon + ":"
                                         + facultate + ":" + med +  ":" + camin1 + ":" + camin2 + ":" + camin3 + ":" + camin4 + ":" + camin5 + ":" + gen;
                                 out.println(studentNou);
@@ -843,6 +883,3 @@ public class ClientApplication extends Application {
         stage.show();
     }
 }
-
-//Aplicatie de tip client-server, la partea de client voi avea interfata grafica iar la partea de server voi avea partea de procesare a cerintelor studentilor.
-//Un student va avea o lista de preferinte a caminelor, un nr matricol si o medie in functie de care va fi repartizat in camin.
