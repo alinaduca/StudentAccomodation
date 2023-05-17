@@ -5,7 +5,6 @@ drop table studenti1;
 drop table facultate_camine;
 /
 
-
 CREATE TABLE studenti1 (
   id INT NOT NULL PRIMARY KEY,
   nume VARCHAR2(15),
@@ -45,8 +44,33 @@ CREATE TABLE facultate_camine (
   nume_facultate VARCHAR2(50),
   id_camin INTEGER,
   locuri_fete INTEGER,
-  locuri_baieti INTEGER
+  locuri_baieti INTEGER,
+  FOREIGN KEY (id_camin) REFERENCES camine(id)
 )
+/
+
+CREATE OR REPLACE TRIGGER check_nr_matricol
+BEFORE INSERT ON studenti1
+FOR EACH ROW
+DECLARE
+  nr_matricol_count INTEGER;
+BEGIN
+  SELECT COUNT(*) INTO nr_matricol_count
+  FROM studenti1
+  WHERE nr_matricol = :NEW.nr_matricol;
+
+  IF nr_matricol_count > 0 THEN
+    RAISE_APPLICATION_ERROR(-20001, 'Numarul matricol exista deja in baza de date.');
+  END IF;
+END;
+/
+
+CREATE OR REPLACE TRIGGER delete_camine_trigger
+BEFORE DELETE ON camine
+FOR EACH ROW
+BEGIN
+  DELETE FROM facultate_camine WHERE id_camin = :OLD.id;
+END;
 /
 
 
@@ -192,7 +216,6 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('Error: Duplicate value!');
   WHEN OTHERS THEN
     DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM);
-    -- Sau folose?te DBMS_OUTPUT.PUT_LINE('Error: ' || DBMS_UTILITY.FORMAT_ERROR_STACK);
 END;
 /
 
@@ -254,7 +277,6 @@ BEGIN
       WHEN 13 THEN 'Facultatea de Teologie Ortodoxa'
       WHEN 14 THEN 'Facultatea de Teologie Romano-Catolica'
     END;
-    DBMS_OUTPUT.PUT_LINE(facultate_student);
     OPEN c(facultate_student);
   nr := 1;
     LOOP
@@ -262,7 +284,6 @@ BEGIN
         v_camine_pe_facultate.extend;
         FETCH c INTO v_camine_pe_facultate(nr);
         EXIT WHEN c%NOTFOUND;
-        DBMS_OUTPUT.PUT_LINE(v_camine_pe_facultate(nr));
         nr := nr + 1;
         EXCEPTION WHEN NO_DATA_FOUND THEN
           EXIT; -- Exit the loop if no more data is found
@@ -270,10 +291,8 @@ BEGIN
   END LOOP;
   CLOSE c;
   nr := nr - 1;
-  DBMS_OUTPUT.PUT_LINE(nr);
   IF nr > 0 THEN 
     preferinta_aleasa := ROUND(DBMS_RANDOM.VALUE(1, nr));
-    --DBMS_OUTPUT.PUT_LINE(preferinta_aleasa);
     preferinta1_student := v_camine_pe_facultate(preferinta_aleasa);
     for j in preferinta_aleasa..nr-1 loop
       v_camine_pe_facultate(j) := v_camine_pe_facultate(j+1);
@@ -281,10 +300,8 @@ BEGIN
     v_camine_pe_facultate.delete(nr);
     nr := nr - 1;
   END IF;
-  DBMS_OUTPUT.PUT_LINE(nr);
   IF nr > 0 THEN 
     preferinta_aleasa := ROUND(DBMS_RANDOM.VALUE(1, nr));
-    --DBMS_OUTPUT.PUT_LINE(preferinta_aleasa);
     preferinta2_student := v_camine_pe_facultate(preferinta_aleasa);
     v_camine_pe_facultate.DELETE(preferinta_aleasa);
     for j in preferinta_aleasa..nr-1 loop
