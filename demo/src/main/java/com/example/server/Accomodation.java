@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.CallableStatement;
 
 public class Accomodation {
     Connection connection;
@@ -14,6 +15,19 @@ public class Accomodation {
         this.connection = connection;
     }
 
+    public void ApelareMetoda ()
+    {
+        String procedureName = "modificare_camin_repartizat";
+        String callStatement = "{ call " + procedureName + "() }";
+        try {
+            CallableStatement callableStatement = connection.prepareCall(callStatement);
+            callableStatement.execute();
+            callableStatement.close();
+            System.out.println("Procedura Oracle a fost apelată cu succes!");
+        } catch (Exception e) {
+            System.out.println("A apărut o eroare la apelarea procedurii Oracle: " + e.getMessage());
+        }
+    }
     public void RepartizareStudentiInCamin () {
         //pentru fiecare facultate
         List<String> facultati = getFacultati();
