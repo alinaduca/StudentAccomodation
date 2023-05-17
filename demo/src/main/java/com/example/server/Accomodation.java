@@ -609,4 +609,27 @@ public class Accomodation {
         }
         return null;
     }
+
+    public void delete(String nrMatricol) {
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = connection.prepareStatement("DELETE FROM studenti1 WHERE nr_matricol LIKE ?");
+            preparedStatement.setString(1, nrMatricol);
+            int rowsDeleted = preparedStatement.executeUpdate();
+            if (rowsDeleted > 0) {
+                System.out.println("Studentul s-a sters cu succes.");
+            }
+            else {
+                System.out.println("Studentul nu a putut fi sters.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                preparedStatement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

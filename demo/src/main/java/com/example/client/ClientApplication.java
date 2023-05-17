@@ -206,6 +206,7 @@ public class ClientApplication extends Application {
         backButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                nrMatricol = null;
                 firstPage(stage);
             }
         });
@@ -216,6 +217,7 @@ public class ClientApplication extends Application {
         Button turul2_2 = new Button("Înscriere turul 2");
         Button detaliiCamin = new Button("Informații despre cămin");
         Label mesajTur2Label = new Label();
+        Label mesajTur2_2Label = new Label();
 
         HBox turul2Panel = new HBox(turul2);
         turul2Panel.setAlignment(Pos.CENTER);
@@ -224,6 +226,10 @@ public class ClientApplication extends Application {
         bottomPanel.setAlignment(Pos.CENTER);
 
         HBox confirmarePanel = new HBox(confirmaLoc, renuntare, turul2_2);
+        HBox panelForLabel = new HBox(mesajTur2_2Label);
+        panelForLabel.setAlignment(Pos.CENTER);
+        VBox confPanel = new VBox(confirmarePanel, panelForLabel);
+
         confirmarePanel.setAlignment(Pos.CENTER);
         TextField nrMatricolTextField = new TextField();
         Button verificaButton = new Button("Verifică");
@@ -240,7 +246,7 @@ public class ClientApplication extends Application {
         mainPanel.setPadding(new Insets(20, 0, 0, 0));
         Label feedbackRepartizare = new Label("Nu ai fost repartizat.");
         VBox newVbox = new VBox(feedbackRepartizare, turul2, mesajTur2Label);
-        newVbox.setSpacing(10);
+        newVbox.setSpacing(20);
         newVbox.setAlignment(Pos.CENTER);
         mainPanel.setSpacing(20);
         HBox backPanel = new HBox(backButton);
@@ -250,6 +256,7 @@ public class ClientApplication extends Application {
             @Override
             public void handle(ActionEvent event) {
                 String nrMat = nrMatricolTextField.getText();
+                nrMatricol = nrMat;
                 if(nrMat == null || nrMat.length() < 1) {
                     mesajNumarMatricol.setText("Nu ai introdus numărul matricol.");
                     mesajNumarMatricol.setTextFill(Color.RED);
@@ -277,7 +284,7 @@ public class ClientApplication extends Application {
                     }
                     else {
                         mesajNumarMatricol.setText("Ai fost repartizat la căminul " + inputLine + ".");
-                        mainPanel.getChildren().add(confirmarePanel);
+                        mainPanel.getChildren().add(confPanel);
                         confirmarePanel.setSpacing(10);
                         confirmarePanel.setPadding(new Insets(0, 0, 100, 0));
                         root.setBottom(bottomPanel);
@@ -286,10 +293,25 @@ public class ClientApplication extends Application {
             }
         });
 
-        turul2_2.setOnAction(new EventHandler<ActionEvent>() {
+        turul2_2.setOnAction(new EventHandler<ActionEvent>() { //pt studentul repartizat
+            @Override
+            public void handle(ActionEvent event) {
+                mesajTur2_2Label.setText("Te-ai înscris cu succes în turul 2.");
+            }
+        });
+        turul2.setOnAction(new EventHandler<ActionEvent>() { //pt studentul nerepartizat
             @Override
             public void handle(ActionEvent event) {
                 mesajTur2Label.setText("Te-ai înscris cu succes în turul 2.");
+            }
+        });
+
+        renuntare.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                out.println("renunta:" + nrMatricol);
+                nrMatricol = null;
+                firstPage(stage);
             }
         });
         root.setTop(backPanel);

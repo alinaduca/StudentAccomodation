@@ -105,6 +105,9 @@ public class ClientThread extends Thread {
                                     else if(parts[0].equals("verifica-nr-matricol")) {
                                         out.println(accomodation.verificareRepartitie(parts[1]));
                                     }
+                                    else if(parts[0].equals("renunta")) {
+                                        accomodation.delete(parts[1]);
+                                    }
                                 }
                             }
                         }
