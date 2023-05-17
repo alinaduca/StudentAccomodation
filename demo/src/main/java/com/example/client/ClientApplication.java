@@ -200,8 +200,9 @@ public class ClientApplication extends Application {
     private static boolean repartizareTurul2 = false;
 
     private void checkRepartition(Stage stage) {
+        boolean repartizat = false;
+//        boolean
         BorderPane root = new BorderPane();
-
         Button backButton = new Button("Back");
         backButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -226,9 +227,19 @@ public class ClientApplication extends Application {
                     mesajNumarMatricol.setTextFill(Color.RED);
                 }
                 else {
-                    //Aici ii trimit serverului mesajul ca s-a citit un nr matricol
-                    //Mesajul ar fi sub forma "student;<nr-matricol>"
-                    //Aici mi se va returna un mesaj, anume daca studentul a intrat sau nu la un camin selectat.
+                    mesajNumarMatricol.setTextFill(Color.BLACK);
+                    String newMessage = "verifica-nr-matricol:" + nrMat;
+                    out.println(newMessage);
+                    String inputLine = null;
+                    try {
+                        inputLine = in.readLine();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    if(inputLine == null || inputLine.equals("null")) {
+                        mesajNumarMatricol.setText("Nu ai fost repartizat.");
+
+                    }
                 }
             }
         });
@@ -739,10 +750,10 @@ public class ClientApplication extends Application {
         group.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 if(((RadioButton)newValue).getText().equals("Feminin")) {
-                    gen = "Feminin";
+                    gen = "fata";
                 }
                 else {
-                    gen = "Masculin";
+                    gen = "baiat";
                 }
             }
         });
