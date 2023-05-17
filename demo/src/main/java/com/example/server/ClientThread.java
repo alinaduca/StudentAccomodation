@@ -71,7 +71,7 @@ public class ClientThread extends Thread {
                             }
                             else {
                                 if(inputLine.equals("repartizeaza2")) {
-                                    accomodation.Repartizare2StudentiInCamin();
+                                    accomodation.RepartizareStudentiInCamin();
                                     out.println("ok");
                                 }
                                 else {

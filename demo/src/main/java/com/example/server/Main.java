@@ -19,6 +19,7 @@ public class Main {
             System.out.println("Game server started on port " + port);
             Connection connection = DatabaseConnection.getInstance().getConnection();
             Accomodation accomodation = new Accomodation(connection);
+            accomodation.RepartizareStudentiInCamin();
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Client connected: " + clientSocket.getInetAddress().getHostAddress());

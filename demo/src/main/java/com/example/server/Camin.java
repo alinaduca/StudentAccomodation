@@ -9,17 +9,13 @@ public class Camin {
     private String nume;
     private Integer capacitatePerCamera;
     private Integer pret;
-    private Integer nrCamereFete;
-    private Integer nrCamereBaieti;
     private static List<Camin> camine = new ArrayList<>();
 
-    public Camin(Integer id, String nume, Integer capacitatePerCamera, Integer pret, Integer nrCamereFete, Integer nrCamereBaieti) {
+    public Camin(Integer id, String nume, Integer capacitatePerCamera, Integer pret) {
         this.id=id;
         this.nume = nume;
         this.capacitatePerCamera = capacitatePerCamera;
         this.pret = pret;
-        this.nrCamereFete = nrCamereFete;
-        this.nrCamereBaieti = nrCamereBaieti;
         camine.add(this);
     }
     public int getId () {
@@ -50,33 +46,18 @@ public class Camin {
         this.pret = pret;
     }
 
-    public Integer getNrCamereFete() {
-        return nrCamereFete;
-    }
-
-    public void setNrCamereFete(Integer nrCamereFete) {
-        this.nrCamereFete = nrCamereFete;
-    }
-
-    public Integer getNrCamereBaieti() {
-        return nrCamereBaieti;
-    }
-
-    public void setNrCamereBaieti(Integer nrCamereBaieti) {
-        this.nrCamereBaieti = nrCamereBaieti;
-    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Camin camin = (Camin) o;
-        return Objects.equals(id, camin.id) && Objects.equals(nume, camin.nume) && Objects.equals(capacitatePerCamera, camin.capacitatePerCamera) && Objects.equals(pret, camin.pret) && Objects.equals(nrCamereFete, camin.nrCamereFete) && Objects.equals(nrCamereBaieti, camin.nrCamereBaieti);
+        return Objects.equals(id, camin.id) && Objects.equals(nume, camin.nume) && Objects.equals(capacitatePerCamera, camin.capacitatePerCamera) && Objects.equals(pret, camin.pret);
     }
 
     @Override
     public int hashCode() {
         //cred ca trebuie si id aici
-        return Objects.hash(nume, capacitatePerCamera, pret, nrCamereFete, nrCamereBaieti);
+        return Objects.hash(nume, capacitatePerCamera, pret);
     }
 
     public static Camin getByName(String name) {

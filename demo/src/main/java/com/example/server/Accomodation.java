@@ -199,7 +199,7 @@ public class Accomodation {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
-            preparedStatement = connection.prepareStatement("SELECT * FROM studenti1 WHERE facultate = ? ORDER BY medie DESC");
+            preparedStatement = connection.prepareStatement("SELECT * FROM studenti1 WHERE facultate = ? AND camin_repartizat IS NULL ORDER BY medie DESC");
             preparedStatement.setString(1, facultate);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -251,9 +251,7 @@ public class Accomodation {
                 String nume = resultSet.getString("nume");
                 int capacitatePerCamera = resultSet.getInt("capacitate_per_camera");
                 int pret = resultSet.getInt("pret");
-                int nrCamereFete = resultSet.getInt("nr_camere_fete");
-                int nrCamereBaieti = resultSet.getInt("nr_camere_baieti");
-                Camin camin = new Camin(id, nume, capacitatePerCamera, pret, nrCamereFete, nrCamereBaieti);
+                Camin camin = new Camin(id, nume, capacitatePerCamera, pret);
                 camine.add(camin);
             }
         } catch (SQLException e) {
@@ -319,82 +317,82 @@ public class Accomodation {
         return false;
     }
 
-    public void Repartizare2StudentiInCamin () {
-        //pentru fiecare facultate
-        List<String> facultati = getFacultati();
-//        System.out.println("Facultati: ");
-//        System.out.println(facultati.toString());
-        for (String facultate : facultati) {
-            //selectam caminele la care facultatea a primit locuri
-//            System.out.println("");
-//            System.out.println("Camine la " + facultate);
-            List<Camin> camine = getCaminePentruFacultate(facultate);
-//            System.out.println(camine.toString());
-            //selectam studentii ordonati descrescator dupa medie
-//            System.out.println("");
-//            System.out.println("Studenti care au cerut repartizare dupa medie:");
-            List<Student> studenti = getStudentiDupaMedieDeLaFacultateInSesiunea2(facultate);
-//            System.out.println(studenti.toString());
-            for (Student student : studenti) {
-                if(NuERepartizat(student.getId())==true) {
-//                    System.out.println(student.toString());
-                    for (String preferinta : student.getPreferinte()) {
-//                        System.out.println(preferinta);
-                        if (verificaDisponibilitatePreferinta(preferinta, camine, student) == true) {
-//                            System.out.println("am actualizat caminul studentului " + student.getFirstName() + " cu valloarea " + preferinta);
-                            updateRepartizareCaminPentruStudent(student.getId(), preferinta);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        SetAllReinscrisCuNull();
-    }
+//    public void Repartizare2StudentiInCamin () {
+//        //pentru fiecare facultate
+//        List<String> facultati = getFacultati();
+////        System.out.println("Facultati: ");
+////        System.out.println(facultati.toString());
+//        for (String facultate : facultati) {
+//            //selectam caminele la care facultatea a primit locuri
+////            System.out.println("");
+////            System.out.println("Camine la " + facultate);
+//            List<Camin> camine = getCaminePentruFacultate(facultate);
+////            System.out.println(camine.toString());
+//            //selectam studentii ordonati descrescator dupa medie
+////            System.out.println("");
+////            System.out.println("Studenti care au cerut repartizare dupa medie:");
+//            List<Student> studenti = getStudentiDupaMedieDeLaFacultateInSesiunea2(facultate);
+////            System.out.println(studenti.toString());
+//            for (Student student : studenti) {
+//                if(NuERepartizat(student.getId())==true) {
+////                    System.out.println(student.toString());
+//                    for (String preferinta : student.getPreferinte()) {
+////                        System.out.println(preferinta);
+//                        if (verificaDisponibilitatePreferinta(preferinta, camine, student) == true) {
+////                            System.out.println("am actualizat caminul studentului " + student.getFirstName() + " cu valloarea " + preferinta);
+//                            updateRepartizareCaminPentruStudent(student.getId(), preferinta);
+//                            break;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        SetAllReinscrisCuNull();
+//    }
 
-    public List<Student> getStudentiDupaMedieDeLaFacultateInSesiunea2 (String facultate){
-        List<Student> studenti = new ArrayList<>();
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        try {
-            preparedStatement = connection.prepareStatement("SELECT * FROM studenti1 WHERE facultate = ? AND reinscris_la_camin = 1 ORDER BY medie DESC");
-            preparedStatement.setString(1, facultate);
-            resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String nume = resultSet.getString("nume");
-                String prenume = resultSet.getString("prenume");
-                String gen = resultSet.getString("gen");
-                String nr_matricol = resultSet.getString("nr_matricol");
-                String email = resultSet.getString("email");
-                String telefon = resultSet.getString("telefon");
-                double medie = resultSet.getDouble("medie");
-                String preferinta1 = resultSet.getString("preferinta1");
-                String preferinta2 = resultSet.getString("preferinta2");
-                String preferinta3 = resultSet.getString("preferinta3");
-                String preferinta4 = resultSet.getString("preferinta4");
-                String preferinta5 = resultSet.getString("preferinta5");
-                List<String> preferinte = new ArrayList<>();
-                preferinte.add(preferinta1);
-                preferinte.add(preferinta2);
-                preferinte.add(preferinta3);
-                preferinte.add(preferinta4);
-                preferinte.add(preferinta5);
-                Student student = new com.example.server.Student(id, nume, prenume, gen, nr_matricol, email, telefon, facultate, medie, preferinte, connection);
-                studenti.add(student);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                resultSet.close();
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return studenti;
-    }
+//    public List<Student> getStudentiDupaMedieDeLaFacultateInSesiunea2 (String facultate){
+//        List<Student> studenti = new ArrayList<>();
+//        PreparedStatement preparedStatement = null;
+//        ResultSet resultSet = null;
+//        try {
+//            preparedStatement = connection.prepareStatement("SELECT * FROM studenti1 WHERE facultate = ? AND reinscris_la_camin = 1 ORDER BY medie DESC");
+//            preparedStatement.setString(1, facultate);
+//            resultSet = preparedStatement.executeQuery();
+//            while (resultSet.next()) {
+//                int id = resultSet.getInt("id");
+//                String nume = resultSet.getString("nume");
+//                String prenume = resultSet.getString("prenume");
+//                String gen = resultSet.getString("gen");
+//                String nr_matricol = resultSet.getString("nr_matricol");
+//                String email = resultSet.getString("email");
+//                String telefon = resultSet.getString("telefon");
+//                double medie = resultSet.getDouble("medie");
+//                String preferinta1 = resultSet.getString("preferinta1");
+//                String preferinta2 = resultSet.getString("preferinta2");
+//                String preferinta3 = resultSet.getString("preferinta3");
+//                String preferinta4 = resultSet.getString("preferinta4");
+//                String preferinta5 = resultSet.getString("preferinta5");
+//                List<String> preferinte = new ArrayList<>();
+//                preferinte.add(preferinta1);
+//                preferinte.add(preferinta2);
+//                preferinte.add(preferinta3);
+//                preferinte.add(preferinta4);
+//                preferinte.add(preferinta5);
+//                Student student = new com.example.server.Student(id, nume, prenume, gen, nr_matricol, email, telefon, facultate, medie, preferinte, connection);
+//                studenti.add(student);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                resultSet.close();
+//                preparedStatement.close();
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        return studenti;
+//    }
 
     public void SetAllReinscrisCuNull() {
         PreparedStatement preparedStatement = null;
@@ -428,9 +426,7 @@ public class Accomodation {
                 String nume = resultSet.getString("nume");
                 int capacitatePerCamera = resultSet.getInt("capacitate_per_camera");
                 int pret = resultSet.getInt("pret");
-                int nrCamereFete = resultSet.getInt("nr_camere_fete");
-                int nrCamereBaieti = resultSet.getInt("nr_camere_baieti");
-                Camin camin = new Camin(id, nume, capacitatePerCamera, pret, nrCamereFete, nrCamereBaieti);
+                Camin camin = new Camin(id, nume, capacitatePerCamera, pret);
                 camine.add(camin);
             }
         } catch (SQLException e) {
@@ -444,5 +440,22 @@ public class Accomodation {
             }
         }
         return camine;
+    }
+
+    public void setAllCaminRepartizatNull()
+    {
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = connection.prepareStatement("UPDATE studenti1 SET camin_repartizat = null");
+            int rowsUpdated = preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                preparedStatement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
