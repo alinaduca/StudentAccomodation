@@ -95,7 +95,7 @@ public class ClientApplication extends Application {
         if(firstName == null || firstName.length() < 2) {
             return 2;
         }
-        if(nrMatricol == null || nrMatricol.length() != 12) {
+        if(nrMatricol == null || nrMatricol.length() != 14) {
             return 3;
         }
         if(email == null || email.length() < 2 || !email.contains("@") || !email.contains(".")) {
@@ -261,7 +261,7 @@ public class ClientApplication extends Application {
                     mesajNumarMatricol.setText("Nu ai introdus numărul matricol.");
                     mesajNumarMatricol.setTextFill(Color.RED);
                 }
-                else if(nrMat.length() != 12) {
+                else if(nrMat.length() != 14) {
                     mesajNumarMatricol.setText("Numărul matricol nu este valid.");
                     mesajNumarMatricol.setTextFill(Color.RED);
                 }
@@ -297,6 +297,9 @@ public class ClientApplication extends Application {
             @Override
             public void handle(ActionEvent event) {
                 mesajTur2_2Label.setText("Te-ai înscris cu succes în turul 2.");
+                confirmaLoc.setVisible(false);
+                renuntare.setVisible(false);
+                turul2_2.setVisible(false);
             }
         });
         turul2.setOnAction(new EventHandler<ActionEvent>() { //pt studentul nerepartizat
@@ -312,6 +315,12 @@ public class ClientApplication extends Application {
                 out.println("renunta:" + nrMatricol);
                 nrMatricol = null;
                 firstPage(stage);
+            }
+        });
+        confirmaLoc.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
             }
         });
         root.setTop(backPanel);
@@ -467,9 +476,11 @@ public class ClientApplication extends Application {
             }
         });
 
-        criterii1.valueProperty().addListener(new ChangeListener() {
+        criterii1.valueProperty().addListener(new ChangeListener<String>() {
             @Override
-            public void changed(ObservableValue observable, Object t, Object t1) {
+            public void changed(ObservableValue observable, String t, String t1) {
+                facultate = t1;
+                System.out.println(facultate);
                 saveCriteriaSelected[0] = true;
             }
         });
@@ -484,6 +495,7 @@ public class ClientApplication extends Application {
                     mesajLabel.setTextFill(Color.RED);
                 }
                 else {
+                    out.println("save-list:" + facultate);
                     mesajLabel.setText("Lista a fost salvată cu succes.");
                     mesajLabel.setTextFill(Color.GREEN);
                 }

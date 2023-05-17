@@ -108,6 +108,14 @@ public class ClientThread extends Thread {
                                     else if(parts[0].equals("renunta")) {
                                         accomodation.delete(parts[1]);
                                     }
+                                    else if(parts[0].equals("save-list")) {
+                                        if(parts[1].contains("Facultatea")) {
+                                            accomodation.ApelareCSVFacultate(parts[1]);
+                                        }
+                                        else {
+                                            accomodation.ApelareCSVCamin(parts[1]);
+                                        }
+                                    }
                                 }
                             }
                         }
