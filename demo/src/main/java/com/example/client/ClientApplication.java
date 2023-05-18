@@ -141,13 +141,16 @@ public class ClientApplication extends Application {
                 list.add(fac);
             }
         }
-
+        Button admin = new Button("Conectare administrator");
         BorderPane root = new BorderPane();
         Button register = new Button("Înregistrare student");
         register.setFont(Font.font(20));
         Button check = new Button("Verifică repartizare");
+        check.setStyle("-fx-text-fill: #4B2C07; -fx-color: #F1D9A7; -fx-border-color: #4B2C07; -fx-border-radius: 20; -fx-background-radius: 20");
+        register.setStyle("-fx-text-fill: #4B2C07; -fx-color: #F1D9A7; -fx-border-color: #4B2C07; -fx-border-radius: 20; -fx-background-radius: 20");
+        admin.setStyle("-fx-text-fill: #4B2C07; -fx-color: #F1D9A7; -fx-border-color: #4B2C07; -fx-border-radius: 20; -fx-background-radius: 20");
+        root.setStyle("-fx-background-color: #faedcd");
         check.setFont(Font.font(20));
-        Button admin = new Button("Conectare administrator");
         admin.setFont(Font.font(20));
 
         Label mesajAllert = new Label();
