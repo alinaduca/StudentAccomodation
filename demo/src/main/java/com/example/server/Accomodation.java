@@ -560,7 +560,6 @@ public class Accomodation {
     }
 
     public String verificareRepartitie(String nrMatricol) {
-        System.out.println("Am intrat in verifica repartitie.");
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         int nrLinii = 0;
@@ -584,8 +583,6 @@ public class Accomodation {
                 e.printStackTrace();
             }
         }
-        System.out.println("am gasit " + nrLinii + " de studenti cu acest nr matricol.");
-
         preparedStatement = null;
         resultSet = null;
         try {
@@ -657,4 +654,56 @@ public class Accomodation {
             }
         }
     }
+
+    public void confirmaLoc(String nrMatricol) {
+        PreparedStatement preparedStatement = null;
+        int confirmare = 1;
+        try {
+            preparedStatement = connection.prepareStatement("UPDATE studenti1 SET confirmat_camin = ? WHERE nr_matricol = ?");
+            preparedStatement.setInt(1, confirmare);
+            preparedStatement.setString(2, nrMatricol);
+            int rowsUpdated = preparedStatement.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("Repartizarea a fost confirmata cu succes.");
+            }
+            else {
+                System.out.println("Nu s-a actualizat niciun rand din tabel.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                preparedStatement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public String getDetaliiCamin(String camin) {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            preparedStatement = connection.prepareStatement("SELECT capacitate_per_camera, pret, adresa_camin FROM camine WHERE nume LIKE ?");
+            preparedStatement.setString(1, camin);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                String capacitate = resultSet.getString("capacitate_per_camera");
+                String pret = resultSet.getString("pret");
+                String adresa = resultSet.getString("adresa_camin");
+                return capacitate + ";" + pret + ";" + adresa;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                preparedStatement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
 }

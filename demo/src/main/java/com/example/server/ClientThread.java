@@ -118,6 +118,12 @@ public class ClientThread extends Thread {
                                     else if(parts[0].equals("turul2")) {
                                         accomodation.putNullOnCaminRepartizat(parts[1]);
                                     }
+                                    else if(parts[0].equals("confirma")) {
+                                        accomodation.confirmaLoc(parts[1]);
+                                    }
+                                    else if(parts[0].equals("get-detalii-camin")) {
+                                        out.println(accomodation.getDetaliiCamin(parts[1]));
+                                    }
                                 }
                             }
                         }

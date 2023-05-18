@@ -200,6 +200,7 @@ public class ClientApplication extends Application {
     private static boolean repartizareTurul2 = false;
 
     private void checkRepartition(Stage stage) {
+        camin1 = null;
         boolean repartizat = false;
         final boolean[] verificat = {false};
         BorderPane root = new BorderPane();
@@ -260,6 +261,7 @@ public class ClientApplication extends Application {
             public void handle(ActionEvent event) {
                 if(!verificat[0]) {
                     verificat[0] = true;
+                    nrMatricolTextField.setEditable(false);
                     String nrMat = nrMatricolTextField.getText();
                     nrMatricol = nrMat;
                     if(nrMat == null || nrMat.length() < 1) {
@@ -282,14 +284,14 @@ public class ClientApplication extends Application {
                         }
                         if(inputLine == null || inputLine.equals("null")) {
                             mainPanel.getChildren().add(newVbox);
-                            nrMatricolTextField.setEditable(false);
                         }
-                        else if(inputLine.equals("Studentul nu există în baza de date.")) {
+                        else if(inputLine.equals("Studentul nu exista in baza de date.")) {
                             mesajNumarMatricol.setTextFill(Color.RED);
-                            mesajNumarMatricol.setText(inputLine);
+                            mesajNumarMatricol.setText("Studentul nu există în baza de date.");
                         }
                         else {
                             mesajNumarMatricol.setText("Ai fost repartizat la căminul " + inputLine + ".");
+                            camin1 = inputLine;
                             mainPanel.getChildren().add(confPanel);
                             confirmarePanel.setSpacing(10);
                             nrMatricolTextField.setEditable(false);
@@ -301,6 +303,34 @@ public class ClientApplication extends Application {
                 else {
                     ///eventual un mesaj cu "verificarea a fost eefctuată"
                 }
+            }
+        });
+
+        detaliiCamin.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Stage stage1 = new Stage();
+                stage1.setTitle(camin1);
+                BorderPane root = new BorderPane();
+                Label camin = new Label(camin1);
+                out.println("get-detalii-camin:" + camin1);
+                String inputLine = null;
+                try {
+                    inputLine = in.readLine();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                System.out.println(inputLine);
+//                String[] parts = inputLine.split(";");
+//                list1.clear();
+//                for(String fac : parts) {
+//                    if(fac.contains("Facultatea")) {
+//                        list1.add(fac);
+//                    }
+//                }
+                root.setCenter(camin);
+                stage1.setScene(new Scene(root, 700, 500));
+                stage1.show();
             }
         });
 
@@ -344,7 +374,9 @@ public class ClientApplication extends Application {
         confirmaLoc.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
+                out.println("confirma:" + nrMatricol);
+                nrMatricol = null;
+                firstPage(stage);
             }
         });
         root.setTop(backPanel);
