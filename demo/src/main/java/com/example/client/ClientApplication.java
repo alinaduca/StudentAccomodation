@@ -320,16 +320,17 @@ public class ClientApplication extends Application {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                System.out.println(inputLine);
-//                String[] parts = inputLine.split(";");
-//                list1.clear();
-//                for(String fac : parts) {
-//                    if(fac.contains("Facultatea")) {
-//                        list1.add(fac);
-//                    }
-//                }
-                root.setCenter(camin);
-                stage1.setScene(new Scene(root, 700, 500));
+                String[] parts = inputLine.split(";");
+                parts[2] = parts[2].replace('?', 'ă');
+                Label caminLabel = new Label("Cămin: " + camin1);
+                Label pretLabel = new Label("Preț: " + parts[1]);
+                Label capacitateLabel = new Label("Capacitatea unei camere: " + parts[0]);
+                Label adresaLabel = new Label("Adresa: " + parts[2] + ", " + parts[3]);
+                VBox mainPanel = new VBox(caminLabel, pretLabel, capacitateLabel, adresaLabel);
+                mainPanel.setSpacing(20);
+                mainPanel.setAlignment(Pos.CENTER);
+                root.setCenter(mainPanel);
+                stage1.setScene(new Scene(root, 400, 300));
                 stage1.show();
             }
         });

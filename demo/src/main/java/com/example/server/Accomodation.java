@@ -684,14 +684,16 @@ public class Accomodation {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
-            preparedStatement = connection.prepareStatement("SELECT capacitate_per_camera, pret, adresa_camin FROM camine WHERE nume LIKE ?");
+            preparedStatement = connection.prepareStatement("SELECT capacitate_per_camera, pret, c.adresa_camin.strada, c.adresa_camin.nr FROM camine c WHERE nume LIKE ?");
             preparedStatement.setString(1, camin);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
+//                System.out.println(resultSet.g);
                 String capacitate = resultSet.getString("capacitate_per_camera");
                 String pret = resultSet.getString("pret");
-                String adresa = resultSet.getString("adresa_camin");
-                return capacitate + ";" + pret + ";" + adresa;
+                String strada = resultSet.getString(3);
+                String nr = resultSet.getString(4);
+                return capacitate + ";" + pret + ";" + strada + ";" + nr;
             }
         } catch (SQLException e) {
             e.printStackTrace();
