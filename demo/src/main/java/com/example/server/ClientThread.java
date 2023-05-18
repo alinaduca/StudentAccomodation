@@ -16,7 +16,6 @@ public class ClientThread extends Thread {
         this.clientSocket = clientSocket;
         this.server = server;
         this.accomodation = accomodation;
-//        System.out.println(accomodation);
         try {
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             out = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -41,7 +40,6 @@ public class ClientThread extends Thread {
                     break;
                 }
                 else {
-//                    out.println("Server received the request: " + inputLine);
                     if(inputLine.equals("get-facultati")) {
                         List<String> list;
                         list = accomodation.getFacultati();
@@ -59,7 +57,6 @@ public class ClientThread extends Thread {
                             for(Camin camin : list2) {
                                 mesaj = mesaj + ";" + camin.getNume();
                             }
-                            System.out.println(mesaj);
                             out.println(mesaj);
                         }
                         else {
@@ -81,7 +78,6 @@ public class ClientThread extends Thread {
                                         for(Camin camin : list) {
                                             mesaj = mesaj + ";" + camin.getNume();
                                         }
-                                        System.out.println(mesaj);
                                         out.println(mesaj);
                                     }
                                     else if(parts[0].equals("insert-student")) {
@@ -109,10 +105,10 @@ public class ClientThread extends Thread {
                                     }
                                     else if(parts[0].equals("save-list")) {
                                         if(parts[1].contains("Facultatea")) {
-                                            accomodation.ApelareCSVFacultate(parts[1]);
+                                            out.println(accomodation.ApelareCSVFacultate(parts[1]));
                                         }
                                         else {
-                                            accomodation.ApelareCSVCamin(parts[1]);
+                                            out.println(accomodation.ApelareCSVCamin(parts[1]));
                                         }
                                     }
                                     else if(parts[0].equals("turul2")) {

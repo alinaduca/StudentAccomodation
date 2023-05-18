@@ -348,7 +348,6 @@ public class ClientApplication extends Application {
         turul2.setOnAction(new EventHandler<ActionEvent>() { //pt studentul nerepartizat
             @Override
             public void handle(ActionEvent event) {
-//                out.println("turul2:" + nrMatricol);
                 mesajTur2Label.setText("Te-ai înscris cu succes în turul 2.");
                 renuntareNerepartizat.setVisible(false);
                 turul2.setVisible(false);
@@ -515,7 +514,6 @@ public class ClientApplication extends Application {
                             throw new RuntimeException(e);
                         }
                     }
-                    System.out.println(inputLine);
                     String[] parts = inputLine.split(";");
                     list1.clear();
                     for(String camin : parts) {
@@ -537,7 +535,6 @@ public class ClientApplication extends Application {
             @Override
             public void changed(ObservableValue observable, String t, String t1) {
                 facultate = t1;
-                System.out.println(facultate);
                 saveCriteriaSelected[0] = true;
             }
         });
@@ -553,8 +550,17 @@ public class ClientApplication extends Application {
                 }
                 else {
                     out.println("save-list:" + facultate);
-                    mesajLabel.setText("Lista a fost salvată cu succes.");
-                    mesajLabel.setTextFill(Color.GREEN);
+                    String inputLine = null;
+                    try {
+                        inputLine = in.readLine();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    mesajLabel.setText(inputLine);
+                    if(inputLine.equals("Lista a fost salvată cu succes."))
+                        mesajLabel.setTextFill(Color.GREEN);
+                    else
+                        mesajLabel.setTextFill(Color.RED);
                 }
             }
         });

@@ -15,7 +15,7 @@ public class Accomodation {
         this.connection = connection;
     }
 
-    public void ApelareCSVFacultate (String nume_facultate)
+    public String ApelareCSVFacultate(String nume_facultate)
     {
         String procedureName = "export_student_data_facultate";
         String callStatement = "{ call " + procedureName + "('" + nume_facultate + "') }";
@@ -23,13 +23,13 @@ public class Accomodation {
             CallableStatement callableStatement = connection.prepareCall(callStatement);
             callableStatement.execute();
             callableStatement.close();
-            System.out.println("Procedura Oracle a fost apelată cu succes!");
+            return "Lista a fost salvată cu succes.";
         } catch (Exception e) {
-            System.out.println("A apărut o eroare la apelarea procedurii Oracle: " + e.getMessage());
+            return "Lista nu a putut fi salvată.";
         }
     }
 
-    public void ApelareCSVCamin (String nume_camin)
+    public String ApelareCSVCamin(String nume_camin)
     {
         String procedureName = "export_student_data_camin";
         String callStatement = "{ call " + procedureName + "('" + nume_camin + "') }";
@@ -37,34 +37,23 @@ public class Accomodation {
             CallableStatement callableStatement = connection.prepareCall(callStatement);
             callableStatement.execute();
             callableStatement.close();
-            System.out.println("Procedura Oracle a fost apelată cu succes!");
+            return "Lista a fost salvată cu succes.";
         } catch (Exception e) {
-            System.out.println("A apărut o eroare la apelarea procedurii Oracle: " + e.getMessage());
+            return "Lista nu a putut fi salvată.";
         }
     }
 
     public void RepartizareStudentiInCamin () {
         //pentru fiecare facultate
         List<String> facultati = getFacultati();
-//        System.out.println("Facultati: ");
-//        System.out.println(facultati.toString());
         for (String facultate : facultati) {
-//            System.out.println("");
-//            System.out.println("Camine la " + facultate);
             List<Camin> camine = getCaminePentruFacultate(facultate);
-//            System.out.println(camine.toString());
             //selectam studentii ordonati descrescator dupa medie
-//            System.out.println("");
-//            System.out.println("Studenti dupa medie:");
             List<Student> studenti = getStudentiDupaMedieDeLaFacultate(facultate);
-//            System.out.println(studenti.toString());
             for (Student student : studenti) {
                 if(NuERepartizat(student.getId())==true) {
-//                    System.out.println(student.toString());
                     for (String preferinta : student.getPreferinte()) {
-//                        System.out.println(preferinta);
                         if (verificaDisponibilitatePreferinta(preferinta, camine, student) == true) {
-//                            System.out.println("am actualizat caminul studentului " + student.getFirstName() + " cu valloarea " + preferinta);
                             updateRepartizareCaminPentruStudent(student.getId(), preferinta);
                             break;
                         }
@@ -177,14 +166,12 @@ public class Accomodation {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
-//            System.out.println("facultatea " + numeFacultate + " la caminul " + idCamin);
             preparedStatement = connection.prepareStatement("SELECT locuri_fete FROM facultate_camine WHERE nume_facultate = ? AND id_camin = ?");
             preparedStatement.setString(1, numeFacultate);
             preparedStatement.setInt(2, idCamin);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 int nr_locuri_fete = resultSet.getInt("locuri_fete");
-//                System.out.println("Locuri fete la facultatea " + numeFacultate + " la caminul " + idCamin + " : " + nr_locuri_fete);
                 return nr_locuri_fete;
             }
         } catch (SQLException e) {
@@ -345,83 +332,6 @@ public class Accomodation {
         }
         return false;
     }
-
-//    public void Repartizare2StudentiInCamin () {
-//        //pentru fiecare facultate
-//        List<String> facultati = getFacultati();
-////        System.out.println("Facultati: ");
-////        System.out.println(facultati.toString());
-//        for (String facultate : facultati) {
-//            //selectam caminele la care facultatea a primit locuri
-////            System.out.println("");
-////            System.out.println("Camine la " + facultate);
-//            List<Camin> camine = getCaminePentruFacultate(facultate);
-////            System.out.println(camine.toString());
-//            //selectam studentii ordonati descrescator dupa medie
-////            System.out.println("");
-////            System.out.println("Studenti care au cerut repartizare dupa medie:");
-//            List<Student> studenti = getStudentiDupaMedieDeLaFacultateInSesiunea2(facultate);
-////            System.out.println(studenti.toString());
-//            for (Student student : studenti) {
-//                if(NuERepartizat(student.getId())==true) {
-////                    System.out.println(student.toString());
-//                    for (String preferinta : student.getPreferinte()) {
-////                        System.out.println(preferinta);
-//                        if (verificaDisponibilitatePreferinta(preferinta, camine, student) == true) {
-////                            System.out.println("am actualizat caminul studentului " + student.getFirstName() + " cu valloarea " + preferinta);
-//                            updateRepartizareCaminPentruStudent(student.getId(), preferinta);
-//                            break;
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        SetAllReinscrisCuNull();
-//    }
-
-//    public List<Student> getStudentiDupaMedieDeLaFacultateInSesiunea2 (String facultate){
-//        List<Student> studenti = new ArrayList<>();
-//        PreparedStatement preparedStatement = null;
-//        ResultSet resultSet = null;
-//        try {
-//            preparedStatement = connection.prepareStatement("SELECT * FROM studenti1 WHERE facultate = ? AND reinscris_la_camin = 1 ORDER BY medie DESC");
-//            preparedStatement.setString(1, facultate);
-//            resultSet = preparedStatement.executeQuery();
-//            while (resultSet.next()) {
-//                int id = resultSet.getInt("id");
-//                String nume = resultSet.getString("nume");
-//                String prenume = resultSet.getString("prenume");
-//                String gen = resultSet.getString("gen");
-//                String nr_matricol = resultSet.getString("nr_matricol");
-//                String email = resultSet.getString("email");
-//                String telefon = resultSet.getString("telefon");
-//                double medie = resultSet.getDouble("medie");
-//                String preferinta1 = resultSet.getString("preferinta1");
-//                String preferinta2 = resultSet.getString("preferinta2");
-//                String preferinta3 = resultSet.getString("preferinta3");
-//                String preferinta4 = resultSet.getString("preferinta4");
-//                String preferinta5 = resultSet.getString("preferinta5");
-//                List<String> preferinte = new ArrayList<>();
-//                preferinte.add(preferinta1);
-//                preferinte.add(preferinta2);
-//                preferinte.add(preferinta3);
-//                preferinte.add(preferinta4);
-//                preferinte.add(preferinta5);
-//                Student student = new com.example.server.Student(id, nume, prenume, gen, nr_matricol, email, telefon, facultate, medie, preferinte, connection);
-//                studenti.add(student);
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        } finally {
-//            try {
-//                resultSet.close();
-//                preparedStatement.close();
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        return studenti;
-//    }
 
     public void SetAllReinscrisCuNull() {
         PreparedStatement preparedStatement = null;
@@ -688,7 +598,6 @@ public class Accomodation {
             preparedStatement.setString(1, camin);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-//                System.out.println(resultSet.g);
                 String capacitate = resultSet.getString("capacitate_per_camera");
                 String pret = resultSet.getString("pret");
                 String strada = resultSet.getString(3);
@@ -707,5 +616,4 @@ public class Accomodation {
         }
         return null;
     }
-
 }
