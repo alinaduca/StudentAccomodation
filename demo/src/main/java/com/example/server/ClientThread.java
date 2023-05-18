@@ -49,7 +49,6 @@ public class ClientThread extends Thread {
                         for(String facultate : list) {
                             mesaj = mesaj + ";" + facultate;
                         }
-//                        System.out.println(mesaj);
                         out.println(mesaj);
                     }
                     else {
@@ -115,6 +114,9 @@ public class ClientThread extends Thread {
                                         else {
                                             accomodation.ApelareCSVCamin(parts[1]);
                                         }
+                                    }
+                                    else if(parts[0].equals("turul2")) {
+                                        accomodation.putNullOnCaminRepartizat(parts[1]);
                                     }
                                 }
                             }

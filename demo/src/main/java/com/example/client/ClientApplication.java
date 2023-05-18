@@ -201,6 +201,7 @@ public class ClientApplication extends Application {
 
     private void checkRepartition(Stage stage) {
         boolean repartizat = false;
+        final boolean[] verificat = {false};
         BorderPane root = new BorderPane();
         Button backButton = new Button("Back");
         backButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -216,11 +217,13 @@ public class ClientApplication extends Application {
         Button turul2 = new Button("Înscriere turul 2");
         Button turul2_2 = new Button("Înscriere turul 2");
         Button detaliiCamin = new Button("Informații despre cămin");
+        Button renuntareNerepartizat = new Button("Renunță");
         Label mesajTur2Label = new Label();
         Label mesajTur2_2Label = new Label();
 
-        HBox turul2Panel = new HBox(turul2);
+        HBox turul2Panel = new HBox(renuntareNerepartizat, turul2);
         turul2Panel.setAlignment(Pos.CENTER);
+        turul2Panel.setSpacing(20);
         HBox bottomPanel = new HBox(detaliiCamin);
         bottomPanel.setPadding(new Insets(0, 0, 40, 0));
         bottomPanel.setAlignment(Pos.CENTER);
@@ -245,7 +248,7 @@ public class ClientApplication extends Application {
         message.setAlignment(Pos.CENTER);
         mainPanel.setPadding(new Insets(20, 0, 0, 0));
         Label feedbackRepartizare = new Label("Nu ai fost repartizat.");
-        VBox newVbox = new VBox(feedbackRepartizare, turul2, mesajTur2Label);
+        VBox newVbox = new VBox(feedbackRepartizare, turul2Panel, mesajTur2Label);
         newVbox.setSpacing(20);
         newVbox.setAlignment(Pos.CENTER);
         mainPanel.setSpacing(20);
@@ -255,40 +258,48 @@ public class ClientApplication extends Application {
         verificaButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                String nrMat = nrMatricolTextField.getText();
-                nrMatricol = nrMat;
-                if(nrMat == null || nrMat.length() < 1) {
-                    mesajNumarMatricol.setText("Nu ai introdus numărul matricol.");
-                    mesajNumarMatricol.setTextFill(Color.RED);
-                }
-                else if(nrMat.length() != 14) {
-                    mesajNumarMatricol.setText("Numărul matricol nu este valid.");
-                    mesajNumarMatricol.setTextFill(Color.RED);
-                }
-                else {
-                    mesajNumarMatricol.setTextFill(Color.BLACK);
-                    String newMessage = "verifica-nr-matricol:" + nrMat;
-                    out.println(newMessage);
-                    String inputLine = null;
-                    try {
-                        inputLine = in.readLine();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    if(inputLine == null || inputLine.equals("null")) {
-                        mainPanel.getChildren().add(newVbox);
-                    }
-                    else if(inputLine.equals("Studentul nu exista in baza de date.")) {
+                if(!verificat[0]) {
+                    verificat[0] = true;
+                    String nrMat = nrMatricolTextField.getText();
+                    nrMatricol = nrMat;
+                    if(nrMat == null || nrMat.length() < 1) {
+                        mesajNumarMatricol.setText("Nu ai introdus numărul matricol.");
                         mesajNumarMatricol.setTextFill(Color.RED);
-                        mesajNumarMatricol.setText(inputLine);
+                    }
+                    else if(nrMat.length() != 14) {
+                        mesajNumarMatricol.setText("Numărul matricol nu este valid.");
+                        mesajNumarMatricol.setTextFill(Color.RED);
                     }
                     else {
-                        mesajNumarMatricol.setText("Ai fost repartizat la căminul " + inputLine + ".");
-                        mainPanel.getChildren().add(confPanel);
-                        confirmarePanel.setSpacing(10);
-                        confirmarePanel.setPadding(new Insets(0, 0, 100, 0));
-                        root.setBottom(bottomPanel);
+                        mesajNumarMatricol.setTextFill(Color.BLACK);
+                        String newMessage = "verifica-nr-matricol:" + nrMat;
+                        out.println(newMessage);
+                        String inputLine = null;
+                        try {
+                            inputLine = in.readLine();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        if(inputLine == null || inputLine.equals("null")) {
+                            mainPanel.getChildren().add(newVbox);
+                            nrMatricolTextField.setEditable(false);
+                        }
+                        else if(inputLine.equals("Studentul nu există în baza de date.")) {
+                            mesajNumarMatricol.setTextFill(Color.RED);
+                            mesajNumarMatricol.setText(inputLine);
+                        }
+                        else {
+                            mesajNumarMatricol.setText("Ai fost repartizat la căminul " + inputLine + ".");
+                            mainPanel.getChildren().add(confPanel);
+                            confirmarePanel.setSpacing(10);
+                            nrMatricolTextField.setEditable(false);
+                            confirmarePanel.setPadding(new Insets(0, 0, 100, 0));
+                            root.setBottom(bottomPanel);
+                        }
                     }
+                }
+                else {
+                    ///eventual un mesaj cu "verificarea a fost eefctuată"
                 }
             }
         });
@@ -296,6 +307,7 @@ public class ClientApplication extends Application {
         turul2_2.setOnAction(new EventHandler<ActionEvent>() { //pt studentul repartizat
             @Override
             public void handle(ActionEvent event) {
+                out.println("turul2:" + nrMatricol);
                 mesajTur2_2Label.setText("Te-ai înscris cu succes în turul 2.");
                 confirmaLoc.setVisible(false);
                 renuntare.setVisible(false);
@@ -305,11 +317,23 @@ public class ClientApplication extends Application {
         turul2.setOnAction(new EventHandler<ActionEvent>() { //pt studentul nerepartizat
             @Override
             public void handle(ActionEvent event) {
+//                out.println("turul2:" + nrMatricol);
                 mesajTur2Label.setText("Te-ai înscris cu succes în turul 2.");
+                renuntareNerepartizat.setVisible(false);
+                turul2.setVisible(false);
             }
         });
 
         renuntare.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                out.println("renunta:" + nrMatricol);
+                nrMatricol = null;
+                firstPage(stage);
+            }
+        });
+
+        renuntareNerepartizat.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 out.println("renunta:" + nrMatricol);
@@ -401,7 +425,7 @@ public class ClientApplication extends Application {
         });
 
         Label criteriuLabel = new Label("Alege un criteriu de salvare a listei: ");
-        List list = new ArrayList<>(List.of("Facultăți", "Cămine"));
+        List list = new ArrayList<>(List.of("Cămine", "Facultăți"));
         ObservableList<String> options = FXCollections.observableArrayList(list);
         ComboBox criterii = new ComboBox(options);
         HBox savePanel = new HBox(criteriuLabel, criterii);

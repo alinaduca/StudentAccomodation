@@ -632,4 +632,29 @@ public class Accomodation {
             }
         }
     }
+
+    public void putNullOnCaminRepartizat(String nrMatricol) {
+        PreparedStatement preparedStatement = null;
+        String caminRepartizat = null;
+        try {
+            preparedStatement = connection.prepareStatement("UPDATE studenti1 SET camin_repartizat = ? WHERE nr_matricol = ?");
+            preparedStatement.setString(1, caminRepartizat);
+            preparedStatement.setString(2, nrMatricol);
+            int rowsUpdated = preparedStatement.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("S-a eliminat cu succes caminul repartizat.");
+            }
+            else {
+                System.out.println("Nu s-a actualizat niciun rand din tabel.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                preparedStatement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

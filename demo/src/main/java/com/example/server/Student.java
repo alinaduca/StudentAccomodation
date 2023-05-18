@@ -1,7 +1,5 @@
 package com.example.server;
 
-import com.example.server.Camin;
-
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +28,6 @@ public class Student {
         this.facultate = facultate;
         this.medie = medie;
         this.preferinte = preferinte;
-//        this.connection = connection;
         this.camin_repartizat = null;
     }
 
@@ -124,17 +121,6 @@ public class Student {
     public void setPreferinte(List<String> preferinte) {
         this.preferinte = preferinte;
     }
-
-//    public Student(String firstName, String lastName, String nrMatricol, String email, String telefon, double medie, List<String> preferinte, Connection connection) {
-//        this.firstName = firstName;
-//        this.lastName = lastName;
-//        this.nrMatricol = nrMatricol;
-//        this.email = email;
-//        this.telefon = telefon;
-//        this.medie = medie;
-//        this.preferinte = preferinte;
-//        this.connection = connection;
-//    }
 
     @Override
     public String toString() {
