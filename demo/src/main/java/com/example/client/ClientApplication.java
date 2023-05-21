@@ -265,7 +265,13 @@ public class ClientApplication extends Application {
         mainPanel.setPadding(new Insets(20, 0, 0, 0));
         Label feedbackRepartizare = new Label("Nu ai fost repartizat.");
         feedbackRepartizare.setStyle("-fx-text-fill: #4B2C07");
-        VBox newVbox = new VBox(feedbackRepartizare, turul2Panel, mesajTur2Label);
+        VBox newVbox;
+        if(repartizareTurul2 == false) {
+            newVbox = new VBox(feedbackRepartizare, turul2Panel, mesajTur2Label);
+        }
+        else {
+            newVbox = new VBox(feedbackRepartizare);
+        }
         newVbox.setSpacing(20);
         newVbox.setAlignment(Pos.CENTER);
         mainPanel.setSpacing(20);
@@ -303,21 +309,21 @@ public class ClientApplication extends Application {
                         }
                         else if(inputLine.equals("Studentul nu exista in baza de date.")) {
                             mesajNumarMatricol.setTextFill(Color.RED);
+                            mesajNumarMatricol.setStyle("-fx-text-fill: red");
                             mesajNumarMatricol.setText("Studentul nu există în baza de date.");
                         }
                         else {
                             mesajNumarMatricol.setText("Ai fost repartizat la căminul " + inputLine + ".");
                             camin1 = inputLine;
-                            mainPanel.getChildren().add(confPanel);
+                            if(repartizareTurul2 == false) {
+                                mainPanel.getChildren().add(confPanel);
+                            }
                             confirmarePanel.setSpacing(10);
                             nrMatricolTextField.setEditable(false);
                             confirmarePanel.setPadding(new Insets(0, 0, 100, 0));
                             root.setBottom(bottomPanel);
                         }
                     }
-                }
-                else {
-                    ///eventual un mesaj cu "verificarea a fost efctuată"
                 }
             }
         });
@@ -711,6 +717,7 @@ public class ClientApplication extends Application {
         HBox backPanel = new HBox(backButton);
 
         Label numeLabel = new Label("Nume: ");
+        numeLabel.setPadding(new Insets(4, 0, 0, 0));
         TextField numeTextField = new TextField();
         numeTextField.setStyle("-fx-text-fill: #4B2C07; -fx-fill: #F1D9A7; -fx-border-color: #cfb88a; -fx-border-radius: 15; -fx-background-radius: 15");
         numeTextField.setPrefWidth(textFieldWidth);
@@ -718,6 +725,7 @@ public class ClientApplication extends Application {
         HBox numePanel = new HBox(numeLabel, numeTextField);
 
         Label prenumeLabel = new Label("Prenume: ");
+        prenumeLabel.setPadding(new Insets(4, 0, 0, 0));
         TextField prenumeTextField = new TextField();
         prenumeTextField.setStyle("-fx-text-fill: #4B2C07; -fx-fill: #F1D9A7; -fx-border-color: #cfb88a; -fx-border-radius: 15; -fx-background-radius: 15");
         prenumeTextField.setPrefWidth(textFieldWidth);
@@ -725,6 +733,7 @@ public class ClientApplication extends Application {
         HBox prenumePanel = new HBox(prenumeLabel, prenumeTextField);
 
         Label nrMatricolLabel = new Label("Număr matricol: ");
+        nrMatricolLabel.setPadding(new Insets(4, 0, 0, 0));
         TextField nrMatricolTextField = new TextField(nrMatricol);
         nrMatricolTextField.setStyle("-fx-text-fill: #4B2C07; -fx-fill: #F1D9A7; -fx-border-color: #cfb88a; -fx-border-radius: 15; -fx-background-radius: 15");
         nrMatricolTextField.setPrefWidth(textFieldWidth);
@@ -732,6 +741,7 @@ public class ClientApplication extends Application {
         HBox nrMatricolPanel = new HBox(nrMatricolLabel, nrMatricolTextField);
 
         Label emailLabel = new Label("Email: ");
+        emailLabel.setPadding(new Insets(4, 0, 0, 0));
         TextField emailTextField = new TextField(email);
         emailTextField.setStyle("-fx-text-fill: #4B2C07; -fx-fill: #F1D9A7; -fx-border-color: #cfb88a; -fx-border-radius: 15; -fx-background-radius: 15");
         emailTextField.setPrefWidth(textFieldWidth);
@@ -739,6 +749,7 @@ public class ClientApplication extends Application {
         HBox emailPanel = new HBox(emailLabel, emailTextField);
 
         Label telefonLabel = new Label("Număr de telefon: ");
+        telefonLabel.setPadding(new Insets(4, 0, 0, 0));
         TextField telefonTextField = new TextField(telefon);
         telefonTextField.setStyle("-fx-text-fill: #4B2C07; -fx-fill: #F1D9A7; -fx-border-color: #cfb88a; -fx-border-radius: 15; -fx-background-radius: 15");
         telefonTextField.setPrefWidth(textFieldWidth);
@@ -746,6 +757,7 @@ public class ClientApplication extends Application {
         HBox telefonPanel = new HBox(telefonLabel, telefonTextField);
 
         Label facultateLabel = new Label("Facultate: ");
+        facultateLabel.setPadding(new Insets(4, 0, 0, 0));
         ObservableList<String> options = FXCollections.observableArrayList(list);
         ComboBox facultateComboBox = new ComboBox(options);
         facultateComboBox.setStyle("-fx-text-fill: #4B2C07; -fx-fill: #F1D9A7; -fx-border-color: #cfb88a; -fx-border-radius: 15; -fx-background-radius: 15");
@@ -754,6 +766,7 @@ public class ClientApplication extends Application {
         HBox facultatePanel = new HBox(facultateLabel, facultateComboBox);
 
         Label medieLabel = new Label("Media pe ultimul an universitar încheiat: ");
+        medieLabel.setPadding(new Insets(4, 0, 0, 0));
         TextField medieTextField = new TextField();
         medieTextField.setStyle("-fx-text-fill: #4B2C07; -fx-fill: #F1D9A7; -fx-border-color: #cfb88a; -fx-border-radius: 15; -fx-background-radius: 15");
         medieTextField.setPrefWidth(50);
