@@ -224,6 +224,15 @@ public class ClientApplication extends Application {
         Button renuntareNerepartizat = new Button("Renunță");
         Label mesajTur2Label = new Label();
         Label mesajTur2_2Label = new Label();
+        nrMatricolLabel.setStyle("-fx-text-fill: #4B2C07");
+        renuntare.setStyle("-fx-text-fill: #4B2C07; -fx-color: #F1D9A7; -fx-border-color:  #4B2C07; -fx-border-radius: 15; -fx-background-radius: 15");
+        renuntareNerepartizat.setStyle("-fx-text-fill: #4B2C07; -fx-color: #F1D9A7; -fx-border-color:  #4B2C07; -fx-border-radius: 15; -fx-background-radius: 15");
+        confirmaLoc.setStyle("-fx-text-fill: #4B2C07; -fx-color: #F1D9A7; -fx-border-color:  #4B2C07; -fx-border-radius: 15; -fx-background-radius: 15");
+        detaliiCamin.setStyle("-fx-text-fill: #4B2C07; -fx-color: #F1D9A7; -fx-border-color:  #4B2C07; -fx-border-radius: 15; -fx-background-radius: 15");
+        turul2_2.setStyle("-fx-text-fill: #4B2C07; -fx-color: #F1D9A7; -fx-border-color:  #4B2C07; -fx-border-radius: 15; -fx-background-radius: 15");
+        turul2.setStyle("-fx-text-fill: #4B2C07; -fx-color: #F1D9A7; -fx-border-color:  #4B2C07; -fx-border-radius: 15; -fx-background-radius: 15");
+        mesajTur2_2Label.setStyle("-fx-text-fill: #4B2C07");
+        mesajTur2Label.setStyle("-fx-text-fill: #4B2C07");
 
         HBox turul2Panel = new HBox(renuntareNerepartizat, turul2);
         turul2Panel.setAlignment(Pos.CENTER);
@@ -239,7 +248,10 @@ public class ClientApplication extends Application {
 
         confirmarePanel.setAlignment(Pos.CENTER);
         TextField nrMatricolTextField = new TextField();
+        nrMatricolTextField.setStyle("-fx-text-fill: #4B2C07; -fx-color: #F1D9A7; -fx-border-color:  #cfb88a; -fx-border-radius: 15; -fx-background-radius: 15");
+
         Button verificaButton = new Button("Verifică");
+        verificaButton.setStyle("-fx-text-fill: #4B2C07; -fx-color: #F1D9A7; -fx-border-color: #4B2C07; -fx-border-radius: 15; -fx-background-radius: 15");
         Label mesajNumarMatricol = new Label();
 
         HBox verifica = new HBox(verificaButton);
@@ -252,6 +264,7 @@ public class ClientApplication extends Application {
         message.setAlignment(Pos.CENTER);
         mainPanel.setPadding(new Insets(20, 0, 0, 0));
         Label feedbackRepartizare = new Label("Nu ai fost repartizat.");
+        feedbackRepartizare.setStyle("-fx-text-fill: #4B2C07");
         VBox newVbox = new VBox(feedbackRepartizare, turul2Panel, mesajTur2Label);
         newVbox.setSpacing(20);
         newVbox.setAlignment(Pos.CENTER);
@@ -276,7 +289,7 @@ public class ClientApplication extends Application {
                         mesajNumarMatricol.setTextFill(Color.RED);
                     }
                     else {
-                        mesajNumarMatricol.setTextFill(Color.BLACK);
+                        mesajNumarMatricol.setStyle("-fx-text-fill: #4B2C07");
                         String newMessage = "verifica-nr-matricol:" + nrMat;
                         out.println(newMessage);
                         String inputLine = null;
@@ -304,7 +317,7 @@ public class ClientApplication extends Application {
                     }
                 }
                 else {
-                    ///eventual un mesaj cu "verificarea a fost eefctuată"
+                    ///eventual un mesaj cu "verificarea a fost efctuată"
                 }
             }
         });
@@ -315,7 +328,6 @@ public class ClientApplication extends Application {
                 Stage stage1 = new Stage();
                 stage1.setTitle(camin1);
                 BorderPane root = new BorderPane();
-                Label camin = new Label(camin1);
                 out.println("get-detalii-camin:" + camin1);
                 String inputLine = null;
                 try {
@@ -333,6 +345,11 @@ public class ClientApplication extends Application {
                 mainPanel.setSpacing(20);
                 mainPanel.setAlignment(Pos.CENTER);
                 root.setCenter(mainPanel);
+                caminLabel.setStyle("-fx-text-fill: #4B2C07");
+                pretLabel.setStyle("-fx-text-fill: #4B2C07");
+                capacitateLabel.setStyle("-fx-text-fill: #4B2C07");
+                adresaLabel.setStyle("-fx-text-fill: #4B2C07");
+                root.setStyle("-fx-background-color: #faedcd");
                 stage1.setScene(new Scene(root, 400, 300));
                 stage1.show();
             }
@@ -382,6 +399,8 @@ public class ClientApplication extends Application {
                 firstPage(stage);
             }
         });
+        backButton.setStyle("-fx-text-fill: #4B2C07; -fx-color: #F1D9A7; -fx-border-color: #4B2C07/*; -fx-border-radius: 15; -fx-background-radius: 15*/");
+        root.setStyle("-fx-background-color: #faedcd");
         root.setTop(backPanel);
         root.setCenter(mainPanel);
         stage.show();
@@ -392,6 +411,7 @@ public class ClientApplication extends Application {
         final boolean[] saveCriteriaSelected = {false};
         BorderPane root = new BorderPane();
         Button backButton = new Button("Back");
+        backButton.setStyle("-fx-text-fill: #4B2C07; -fx-color: #F1D9A7; -fx-border-color: #4B2C07");
         backButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -402,6 +422,8 @@ public class ClientApplication extends Application {
         HBox backPanel = new HBox(backButton);
         Button repartition = new Button("Repartizează (turul 1)");
         Button repartition2 = new Button("Repartizează (turul 2)");
+        repartition.setStyle("-fx-text-fill: #4B2C07; -fx-color: #F1D9A7; -fx-border-color: #4B2C07; -fx-border-radius: 15; -fx-background-radius: 15");
+        repartition2.setStyle("-fx-text-fill: #4B2C07; -fx-color: #F1D9A7; -fx-border-color: #4B2C07; -fx-border-radius: 15; -fx-background-radius: 15");
         Label mesajLabel = new Label();
         repartition.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -460,15 +482,18 @@ public class ClientApplication extends Application {
         });
 
         Label criteriuLabel = new Label("Alege un criteriu de salvare a listei: ");
+        criteriuLabel.setStyle("-fx-text-fill: #4B2C07");
         List list = new ArrayList<>(List.of("Cămine", "Facultăți"));
         ObservableList<String> options = FXCollections.observableArrayList(list);
         ComboBox criterii = new ComboBox(options);
+        criterii.setStyle("-fx-text-fill: #4B2C07; -fx-fill: #F1D9A7; -fx-border-color: #cfb88a; -fx-border-radius: 15; -fx-background-radius: 15");
         HBox savePanel = new HBox(criteriuLabel, criterii);
 
         Label criteriuAlesLabel = new Label();
         List list1 = new ArrayList<>();
         ObservableList<String> options1 = FXCollections.observableArrayList(list);
         ComboBox criterii1 = new ComboBox(options1);
+        criterii1.setStyle("-fx-text-fill: #4B2C07; -fx-fill: #F1D9A7; -fx-border-color: #cfb88a; -fx-border-radius: 15; -fx-background-radius: 15");
 
         HBox selectieSuplimentara = new HBox(criteriuAlesLabel, criterii1);
         selectieSuplimentara.setAlignment(Pos.CENTER);
@@ -543,6 +568,7 @@ public class ClientApplication extends Application {
         });
 
         Button saveList = new Button("Salvează listă");
+        saveList.setStyle("-fx-text-fill: #4B2C07; -fx-color: #F1D9A7; -fx-border-color: #4B2C07; -fx-border-radius: 15; -fx-background-radius: 15");
         saveList.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -580,6 +606,7 @@ public class ClientApplication extends Application {
         root.setTop(backPanel);
         root.setBottom(bottomPanel);
         root.setCenter(mainPanel);
+        root.setStyle("-fx-background-color: #faedcd");
         stage.setTitle("StudentAccomodation");
         stage.setScene(new Scene(root, 700, 600));
         stage.show();
@@ -588,6 +615,7 @@ public class ClientApplication extends Application {
     private void loginAdmin(Stage stage) {
         BorderPane root = new BorderPane();
         Button backButton = new Button("Back");
+        backButton.setStyle("-fx-text-fill: #4B2C07; -fx-color: #F1D9A7; -fx-border-color: #4B2C07");
         backButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -598,12 +626,17 @@ public class ClientApplication extends Application {
         HBox backPanel = new HBox(backButton);
         Label usernameLabel = new Label("Nume de utilizator: ");
         Label passwordLabel = new Label("Parolă: ");
+        usernameLabel.setStyle("-fx-text-fill: #4B2C07");
+        passwordLabel.setStyle("-fx-text-fill: #4B2C07");
+
         VBox labelArea = new VBox(usernameLabel, passwordLabel);
         labelArea.setAlignment(Pos.CENTER_RIGHT);
         labelArea.setSpacing(15);
 
         TextField usernameField = new TextField();
         PasswordField passwordField = new PasswordField();
+        usernameField.setStyle("-fx-text-fill: #4B2C07; -fx-color: #F1D9A7; -fx-border-color:  #cfb88a; -fx-border-radius: 15; -fx-background-radius: 15");
+        passwordField.setStyle("-fx-text-fill: #4B2C07; -fx-color: #F1D9A7; -fx-border-color:  #cfb88a; -fx-border-radius: 15; -fx-background-radius: 15");
         VBox textArea = new VBox(usernameField, passwordField);
         textArea.setAlignment(Pos.CENTER_LEFT);
         textArea.setSpacing(10);
@@ -612,6 +645,7 @@ public class ClientApplication extends Application {
         loginPanel.setAlignment(Pos.CENTER);
 
         Button connect = new Button("Autentificare");
+        connect.setStyle("-fx-text-fill: #4B2C07; -fx-color: #F1D9A7; -fx-border-color: #4B2C07; -fx-border-radius: 15; -fx-background-radius: 15");
         Label mesajLabel = new Label();
         VBox connectLabel = new VBox(connect, mesajLabel);
         connectLabel.setAlignment(Pos.CENTER);
@@ -643,6 +677,7 @@ public class ClientApplication extends Application {
         });
         root.setTop(backPanel);
         root.setCenter(connectPanel);
+        root.setStyle("-fx-background-color: #faedcd");
         stage.setTitle("StudentAccomodation");
         stage.setScene(new Scene(root, 700, 600));
         stage.show();
@@ -677,30 +712,35 @@ public class ClientApplication extends Application {
 
         Label numeLabel = new Label("Nume: ");
         TextField numeTextField = new TextField();
+        numeTextField.setStyle("-fx-text-fill: #4B2C07; -fx-fill: #F1D9A7; -fx-border-color: #cfb88a; -fx-border-radius: 15; -fx-background-radius: 15");
         numeTextField.setPrefWidth(textFieldWidth);
         numeTextField.setMaxWidth(textFieldWidth);
         HBox numePanel = new HBox(numeLabel, numeTextField);
 
         Label prenumeLabel = new Label("Prenume: ");
         TextField prenumeTextField = new TextField();
+        prenumeTextField.setStyle("-fx-text-fill: #4B2C07; -fx-fill: #F1D9A7; -fx-border-color: #cfb88a; -fx-border-radius: 15; -fx-background-radius: 15");
         prenumeTextField.setPrefWidth(textFieldWidth);
         prenumeTextField.setMaxWidth(textFieldWidth);
         HBox prenumePanel = new HBox(prenumeLabel, prenumeTextField);
 
         Label nrMatricolLabel = new Label("Număr matricol: ");
         TextField nrMatricolTextField = new TextField(nrMatricol);
+        nrMatricolTextField.setStyle("-fx-text-fill: #4B2C07; -fx-fill: #F1D9A7; -fx-border-color: #cfb88a; -fx-border-radius: 15; -fx-background-radius: 15");
         nrMatricolTextField.setPrefWidth(textFieldWidth);
         nrMatricolTextField.setMaxWidth(textFieldWidth);
         HBox nrMatricolPanel = new HBox(nrMatricolLabel, nrMatricolTextField);
 
         Label emailLabel = new Label("Email: ");
         TextField emailTextField = new TextField(email);
+        emailTextField.setStyle("-fx-text-fill: #4B2C07; -fx-fill: #F1D9A7; -fx-border-color: #cfb88a; -fx-border-radius: 15; -fx-background-radius: 15");
         emailTextField.setPrefWidth(textFieldWidth);
         emailTextField.setMaxWidth(textFieldWidth);
         HBox emailPanel = new HBox(emailLabel, emailTextField);
 
         Label telefonLabel = new Label("Număr de telefon: ");
         TextField telefonTextField = new TextField(telefon);
+        telefonTextField.setStyle("-fx-text-fill: #4B2C07; -fx-fill: #F1D9A7; -fx-border-color: #cfb88a; -fx-border-radius: 15; -fx-background-radius: 15");
         telefonTextField.setPrefWidth(textFieldWidth);
         telefonTextField.setMaxWidth(textFieldWidth);
         HBox telefonPanel = new HBox(telefonLabel, telefonTextField);
@@ -708,12 +748,14 @@ public class ClientApplication extends Application {
         Label facultateLabel = new Label("Facultate: ");
         ObservableList<String> options = FXCollections.observableArrayList(list);
         ComboBox facultateComboBox = new ComboBox(options);
+        facultateComboBox.setStyle("-fx-text-fill: #4B2C07; -fx-fill: #F1D9A7; -fx-border-color: #cfb88a; -fx-border-radius: 15; -fx-background-radius: 15");
         facultateComboBox.setPrefWidth(textFieldWidth);
         facultateComboBox.setMaxWidth(textFieldWidth);
         HBox facultatePanel = new HBox(facultateLabel, facultateComboBox);
 
         Label medieLabel = new Label("Media pe ultimul an universitar încheiat: ");
         TextField medieTextField = new TextField();
+        medieTextField.setStyle("-fx-text-fill: #4B2C07; -fx-fill: #F1D9A7; -fx-border-color: #cfb88a; -fx-border-radius: 15; -fx-background-radius: 15");
         medieTextField.setPrefWidth(50);
         medieTextField.setMaxWidth(50);
         HBox mediePanel = new HBox(medieLabel, medieTextField);
@@ -974,6 +1016,15 @@ public class ClientApplication extends Application {
                 mesajLabel.setTextFill(Color.RED);
             }
         });
+
+        camineComboBox.setStyle("-fx-text-fill: #4B2C07; -fx-fill: #F1D9A7; -fx-border-color: #cfb88a; -fx-border-radius: 15; -fx-background-radius: 15");
+        camineComboBox1.setStyle("-fx-text-fill: #4B2C07; -fx-fill: #F1D9A7; -fx-border-color: #cfb88a; -fx-border-radius: 15; -fx-background-radius: 15");
+        camineComboBox2.setStyle("-fx-text-fill: #4B2C07; -fx-fill: #F1D9A7; -fx-border-color: #cfb88a; -fx-border-radius: 15; -fx-background-radius: 15");
+        camineComboBox3.setStyle("-fx-text-fill: #4B2C07; -fx-fill: #F1D9A7; -fx-border-color: #cfb88a; -fx-border-radius: 15; -fx-background-radius: 15");
+        camineComboBox4.setStyle("-fx-text-fill: #4B2C07; -fx-fill: #F1D9A7; -fx-border-color: #cfb88a; -fx-border-radius: 15; -fx-background-radius: 15");
+        backButton.setStyle("-fx-text-fill: #4B2C07; -fx-color: #F1D9A7; -fx-border-color: #4B2C07/*; -fx-border-radius: 20; -fx-background-radius: 20*/");
+        submit.setStyle("-fx-text-fill: #4B2C07; -fx-color: #F1D9A7; -fx-border-color: #4B2C07; -fx-border-radius: 15; -fx-background-radius: 15");
+        root.setStyle("-fx-background-color: #faedcd");
         controlPanel.setAlignment(Pos.CENTER);
         root.setTop(backPanel);
         root.setCenter(configPanel);
